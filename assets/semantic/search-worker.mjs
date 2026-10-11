@@ -17,9 +17,9 @@ const yieldWorker=()=>globalThis.scheduler?.yield?globalThis.scheduler.yield():n
 function checkCurrent(s){if(s.id!==latestId)throw Error("Search superseded");}
 const PAGE=10; // UI result cards per page, not a restriction on the searchable corpus.
 const status=message=>postMessage({type:'status',message});
-async function checked(url,options){const r=await fetch(new URL(url,'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/semantic/'),options);if(!r.ok)throw Error(`${url}: HTTP ${r.status}`);return r}
+async function checked(url,options){const r=await fetch(new URL(url,'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/semantic/'),options);if(!r.ok)throw Error(`${url}: HTTP ${r.status}`);return r}
 async function json(url){const b=await(await checked(url)).arrayBuffer();if(new Uint8Array(b)[0]===31){const raw=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).text();return JSON.parse(raw)}return JSON.parse(new TextDecoder().decode(b))}
-const asset=name=>new URL(meta.base+name,'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/semantic/').href;
+const asset=name=>new URL(meta.base+name,'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/semantic/').href;
 const buffer=(data,usage)=>{const b=device.createBuffer({size:Math.ceil((typeof data==='number'?data:data.byteLength)/4)*4,usage});if(typeof data!=='number')device.queue.writeBuffer(b,0,data);return b};
 const bind=(pipeline,buffers)=>device.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:buffers.map((b,binding)=>({binding,resource:{buffer:b}}))});
 const compute=code=>device.createComputePipelineAsync({layout:'auto',compute:{module:device.createShaderModule({code}),entryPoint:'main'}});
@@ -28,7 +28,7 @@ async function prepare(){
  preparePromise=(async()=>{
   const start=performance.now();if(!navigator.gpu)throw Error('WebGPU requires a supported browser and HTTPS or localhost.');
   status('Loading the local query model and catalogue index…');let modelMs,indexMs;
-  await Promise.all([(async()=>{const t=performance.now();[tokenizer,model]=await Promise.all([Promise.all([json('https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/tokenizer.json'),json('https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/tokenizer_config.json')]).then(([a,b])=>new BertTokenizer(a,b)),AutoModel.from_pretrained('Xenova/all-MiniLM-L6-v2',{revision:'751bff37182d3f1213fa05d7196b954e230abad9',device:'webgpu',dtype:'fp16',local_files_only:false})]);modelMs=performance.now()-t})(),(async()=>{const t=performance.now();meta=await(await checked('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/semantic/index.json',{cache:'no-store'})).json();if(meta.schema!=='pq-passages-v1')throw Error('The expanded index is still being prepared.');films=await json(asset('films.json.gz'));indexMs=performance.now()-t})()]);
+  await Promise.all([(async()=>{const t=performance.now();[tokenizer,model]=await Promise.all([Promise.all([json('https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/tokenizer.json'),json('https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/tokenizer_config.json')]).then(([a,b])=>new BertTokenizer(a,b)),AutoModel.from_pretrained('Xenova/all-MiniLM-L6-v2',{revision:'751bff37182d3f1213fa05d7196b954e230abad9',device:'webgpu',dtype:'fp16',local_files_only:false})]);modelMs=performance.now()-t})(),(async()=>{const t=performance.now();meta=await(await checked('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/semantic/index.json',{cache:'no-store'})).json();if(meta.schema!=='pq-passages-v1')throw Error('The expanded index is still being prepared.');films=await json(asset('films.json.gz'));indexMs=performance.now()-t})()]);
   status('Warming the query encoder…');let t=performance.now();const out=await model(tokenizer('',{padding:'max_length',max_length:256,truncation:false}));for(const v of Object.values(out))v.dispose?.();const warmMs=performance.now()-t;
   const adapter=await navigator.gpu.requestAdapter();if(!adapter)throw Error('No WebGPU adapter');device=await adapter.requestDevice();device.lost.then(i=>postMessage({type:'fatal',message:'Search GPU lost: '+i.message}));
   status('Loading the compact passage index…');t=performance.now();
@@ -68,7 +68,7 @@ function topK(scores,k){
   else if(value>values[0]){let i=0;while(i*2+1<n){let c=i*2+1;if(c+1<n&&values[c+1]<values[c])c++;if(values[c]>=value)break;rows[i]=rows[c];values[i]=values[c];i=c}rows[i]=row;values[i]=value}
  }return Array.from(rows.subarray(0,n));
 }
-async function byteRanges(url,ranges){
+async function byteRanges(url,ranges){url=new URL(new URL(url,'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/').pathname,'https://mosh-canopy-assets.moshcanopy.workers.dev/').href;
  const r=await checked(url,{headers:{Range:'bytes='+ranges.map(([start,end])=>`${start}-${end}`).join(',')}});
  if(r.status!==206){await r.body?.cancel();throw Error('Static host must support byte-range requests for search results')}
  const bytes=new Uint8Array(await r.arrayBuffer()),pieces=new Map(),expected=new Map(ranges);

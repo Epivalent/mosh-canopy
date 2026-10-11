@@ -1,5 +1,5 @@
 importScripts(...['https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-selection.js?v=neon1','https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-metadata.js?v=neon1','https://epivalent.github.io/mosh-canopy/assets/vendor/concordance-index.js?v=12','https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-store.js?v=4','https://epivalent.github.io/mosh-canopy/assets/vendor/live-transcripts.js','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-published.js?v=7','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-caption-index.js?v=10'].map(path=>new URL(path,self.location.origin).href));
-const metadataCatalogue=new CatalogueMetadata(),retroIndex=new RetroCaptionIndex(),miaIndex=new RetroPublishedCaptions('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/transcripts/search/');
+const metadataCatalogue=new CatalogueMetadata(),retroIndex=new RetroCaptionIndex(),miaIndex=new RetroPublishedCaptions('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/search/');
 // Static corpora already have term postings. Only genuinely new live speech
 // needs client-side indexing. Full transcripts are loaded for matching sheets.
 const store=new TranscriptStore({retroIndex}),live=new LiveTranscripts(),concordance=new ConcordanceIndex({persistent:false});

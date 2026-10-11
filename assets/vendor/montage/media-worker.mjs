@@ -19,7 +19,7 @@ onmessage=async({data:{id,clip,width,context=false}})=>{
   const end=context?(clip.after.at(-1)?.end??clip.end)+1:clip.end;
   progress('Locating the short source shot');let url=clip.url,offset=0,shot=null;
   if(clip.filmId&&!clip.filmId.startsWith('yt:')){
-   const r=await fetch('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/film-shots/'+encodeURIComponent(clip.filmId)+'.json');
+   const r=await fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/film-shots/'+encodeURIComponent(clip.filmId)+'.json');
    if(r.ok){const shots=await r.json();shot=shots.filter(s=>s.start<=start&&s.end>=end).sort((a,b)=>(a.end-a.start)-(b.end-b.start))[0];
     if(shot){const u=new URL(shot.mp4);url='https://mosh-canopy-assets.moshcanopy.workers.dev/film'+u.pathname+u.search;offset=shot.start;}}
   }

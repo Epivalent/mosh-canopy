@@ -278,13 +278,13 @@ details summary{cursor:pointer;margin:8px 0}
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/word-helices.js?v=meaning1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/bead-previews.js?v=4"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-text-pages.js?v=2"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/semantic-search.js?v=pages3"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/semantic-search.js?v=direct-assets1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-concordance.js?v=meaning3"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/clip-captions.js?v=14"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/helix-transcript.js?v=neon1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/live-voz.js?v=opt-in1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/film-controls.js?v=6"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/dream-film.js?v=frame-recovery3"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/dream-film.js?v=direct-assets1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/dream-playback.js?v=2"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/film-atlas-upload.js?v=1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/film-hover.js?v=neon1"></script>
@@ -293,7 +293,7 @@ details summary{cursor:pointer;margin:8px 0}
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-selection.js?v=neon1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-filter-controls.js?v=neon1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/youtube-native.js?v=8"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/youtube-direct.js?v=frame-recovery3-24"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/youtube-direct.js?v=direct-assets1-24"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv.js?v=neon1"></script>
 <script>
 'use strict';
@@ -1532,7 +1532,7 @@ const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 600); camera.position.set
 const cosmos = new THREE.Mesh(new THREE.SphereGeometry(300, 96, 48),
   new THREE.MeshBasicMaterial({ color: 0xb4bac2, side: THREE.BackSide, depthWrite: false, depthTest: false, fog: false }));
 cosmos.visible = false; cosmos.renderOrder = -1000; cosmos.rotation.x = 0.38; scene.add(cosmos);
-new THREE.TextureLoader().load('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/nasa-wise-allsky-8k.jpg', tex => {
+new THREE.TextureLoader().load('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/nasa-wise-allsky-8k.jpg', tex => {
   tex.encoding = THREE.sRGBEncoding;
   tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   cosmos.material.map = tex; cosmos.material.needsUpdate = true; cosmos.visible = true;
@@ -2935,7 +2935,7 @@ const MIA = {
   label(s){ return [s.title || 'Untitled shot', s.year].filter(Boolean).join(' · '); },
   async getJSON(url){
     if (!this.catalogData){
-      this.catalogData = fetch('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/catalog.json').then(r => { if (!r.ok) throw Error(`catalog returned ${r.status}`); return r.json(); });
+      this.catalogData = fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/catalog.json').then(r => { if (!r.ok) throw Error(`catalog returned ${r.status}`); return r.json(); });
     }
     const catalog = await this.catalogData;
     if (url === '/mia/collections') return { collections: catalog.collections };

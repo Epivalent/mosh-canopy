@@ -1,12 +1,13 @@
 {
-  "createdAt": "2026-10-11T16:19:00.685Z",
+  "createdAt": "2026-10-11T20:29:54.830Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
-  "assets": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
+  "assets": "https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/",
+  "relay": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 255489,
-      "sha256": "7155f020f342bdc6cc09594a0fa3302e4c682695952f7dcd5a7bcebf79e3878c"
+      "bytes": 255499,
+      "sha256": "2275b199b5b03f210e2b95d60b0e1a4efbbe82063a0d3080c565cc669ede5cee"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -15,13 +16,13 @@
     },
     {
       "file": "assets/vendor/bead-previews.js",
-      "bytes": 5580,
-      "sha256": "2dcf4a90f3c1141f34dd8e012d995471e9a21050fe1cae3b2c7ba1f90b277803"
+      "bytes": 5584,
+      "sha256": "e6d4413375f89368c860ea7e1dd9e94b725ee487b16454c975b98932a310bcb8"
     },
     {
       "file": "assets/vendor/browser-segmenter-core.js",
-      "bytes": 6142,
-      "sha256": "fb35a625634083be4bdeb5bf25103480496385efa6c5577c44062bb75eb48758"
+      "bytes": 6148,
+      "sha256": "1cce62c9ffbd902e751e005eadb8c22e9fb3fc4519d1d45fd5cbfa59a1c7bdb7"
     },
     {
       "file": "assets/vendor/browser-segmenter-worker.js",
@@ -45,8 +46,8 @@
     },
     {
       "file": "assets/vendor/catalogue-metadata.js",
-      "bytes": 2163,
-      "sha256": "e556bfcadc31fef03b40e666fbd7f935e45f5e7baa7c14bdd6c6f8411aa41d85"
+      "bytes": 2171,
+      "sha256": "94262a2c6fe594361f3fb5b8759c6427b1a4ad9a6511467297b3b9b1dc58352e"
     },
     {
       "file": "assets/vendor/catalogue-selection.js",
@@ -90,8 +91,8 @@
     },
     {
       "file": "assets/vendor/concordance-worker.js",
-      "bytes": 8148,
-      "sha256": "7ef71af522c96a738fea51faa2af00e34e12b680bdee350ab60472dd6b6500c1"
+      "bytes": 8150,
+      "sha256": "4f7830d750ed36d9689c01060a5185257aeb86458763cfb0f02ab39037ba23e3"
     },
     {
       "file": "assets/vendor/dream/assets.js",
@@ -105,18 +106,18 @@
     },
     {
       "file": "assets/vendor/dream/client.js",
-      "bytes": 8372,
-      "sha256": "78362cc8584038232d07ee6bea8d9e3306b9e469879a0baee3eacdd88be387a7"
+      "bytes": 8371,
+      "sha256": "efb3661345c7e7fb0d63606b90622db645a925f8f36793be53ee6ab928d3ca8f"
     },
     {
       "file": "assets/vendor/dream/engine-matrix.js",
-      "bytes": 16683,
-      "sha256": "82f4a7286d9cd81a9dea6229f1f20f892fe8e55895b50dbdeb3c20897667013b"
+      "bytes": 16685,
+      "sha256": "b0cd0d092c50a51489c87099892912d18e89f192a000021d2a80832a7e564095"
     },
     {
       "file": "assets/vendor/dream/engine.js",
-      "bytes": 16678,
-      "sha256": "faf9324bb66d0b972944bc4ee2402ccd3c04c07ae72f6083da8ba44f0ff6ee9b"
+      "bytes": 16680,
+      "sha256": "31c45d6e782a70e5df4bc73d4c1c751e2369e4b9aad86da51bba38a1d02c71c5"
     },
     {
       "file": "assets/vendor/dream/feature.css",
@@ -125,8 +126,8 @@
     },
     {
       "file": "assets/vendor/dream/feature.js",
-      "bytes": 16488,
-      "sha256": "3a56adb188ce54980307f6a178eb8134afe0e5dca1c58fa399e5f1f7194c105a"
+      "bytes": 16487,
+      "sha256": "073f291bdfc572b4bb00dcc8fffcad31b2c6c196d089012a5caf2a63d57edea1"
     },
     {
       "file": "assets/vendor/dream/gpu-canny.js",
@@ -190,8 +191,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/assets.js",
-      "bytes": 2683,
-      "sha256": "75075d50e21b5889309c060c61dcb3de2de8dae515ffe2e6c7ee68f54a4a5f2d"
+      "bytes": 3649,
+      "sha256": "ff4662c1be8bcc4266f600c918549ae61e2ef7982cbf09fe69c9d5ff5b14e245"
     },
     {
       "file": "assets/vendor/dream/studio/gpu-canny.js",
@@ -210,8 +211,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-fast.js",
-      "bytes": 8287,
-      "sha256": "7987f04b58b604d12a821a8c81f178c841c26a19e6b5e5e81ce79a0bbbb4686f"
+      "bytes": 8296,
+      "sha256": "21aaf3ae7fba521db060c7e10e9956edd959bb66b603224d17dc3903d5409018"
     },
     {
       "file": "assets/vendor/dream/studio/native-image-upload.js",
@@ -220,8 +221,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-live-worker.js",
-      "bytes": 7785,
-      "sha256": "184e6c77e164dd928bb8e2fa3641aff5d3cf76a94decfffd571ab3520fa4cb95"
+      "bytes": 7795,
+      "sha256": "4a090ce90c8ca86bf68e13611129fdc02125bb838dd415ccf19f0c88a246cf09"
     },
     {
       "file": "assets/vendor/dream/studio/native-noise.js",
@@ -230,8 +231,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-prefix.js",
-      "bytes": 6380,
-      "sha256": "b4885e048f18480eefea6de2784ceedd80d6787437a77377ccc5550b0a87d05e"
+      "bytes": 6464,
+      "sha256": "87bfc7f333104a197135933fb1ce313d641e16637e6a7a4902092f9babb805d5"
     },
     {
       "file": "assets/vendor/dream/studio/native-present.js",
@@ -240,13 +241,13 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-runtime.js",
-      "bytes": 4525,
-      "sha256": "85d7f1a63b7a50361ba3f3f33564c55b8867c3534167eea8a328c00ef201db96"
+      "bytes": 4761,
+      "sha256": "11d458405e5bde3a9f3aedd084ff6bf6dbde0e863e8af58cde993464d2b7b647"
     },
     {
       "file": "assets/vendor/dream/studio/native-tokenizer.js",
-      "bytes": 1984,
-      "sha256": "451b05d2f5a37003cc82ad03025584e569e2b839089d95af697d947d19fddaa1"
+      "bytes": 2105,
+      "sha256": "8f36f8f0556e22b0a30b8b674ffd53c01464c56509764b002a8018fcbd4b858f"
     },
     {
       "file": "assets/vendor/dream/studio/ort/ort-wasm-simd-threaded.jsep.mjs",
@@ -271,7 +272,7 @@
     {
       "file": "assets/vendor/dream/studio/provenance.json",
       "bytes": 8561,
-      "sha256": "04a81322de905d02f4668a74a1fe2b5d8273f7bbb4aba96ffeca49374a470d2a"
+      "sha256": "3dc60b9848ca13d6032598d3a0a5081bd2c9db52f21181f09e476bc5641bfe74"
     },
     {
       "file": "assets/vendor/dream/studio/studio-gpu.js",
@@ -300,8 +301,8 @@
     },
     {
       "file": "assets/vendor/dream/webnn-spatial-engine.js",
-      "bytes": 3058,
-      "sha256": "bd2393512d00b6564647001eb04f76da8790c45865175961f6b54bcb13b795c2"
+      "bytes": 3060,
+      "sha256": "60711802ce4d4ae1329f902603c1c3ff819b98e20688dcb8ef4b4dfb4f06bba2"
     },
     {
       "file": "assets/vendor/dream/worker.js",
@@ -310,8 +311,8 @@
     },
     {
       "file": "assets/vendor/dream-film.js",
-      "bytes": 1246,
-      "sha256": "df42ccc4d1bf1969660090d0d8b72a5689ee3a14fb74b6f0074a35387ddbde33"
+      "bytes": 1245,
+      "sha256": "84cc5f2b04f2129ee34d4ea4c3e8b5b88b565618f32ad53f47e68aa0ad9426ae"
     },
     {
       "file": "assets/vendor/dream-playback.js",
@@ -370,8 +371,8 @@
     },
     {
       "file": "assets/vendor/montage/media-worker.mjs",
-      "bytes": 5288,
-      "sha256": "e31fee5545a0ae5a8f4dc7c2abe9d0f1dce11f8c8bf6d92d29549d85d51bb5a8"
+      "bytes": 5290,
+      "sha256": "892e5beff54b1f6150c603331560caf4203300e8a4e83349a45648d3e6935d29"
     },
     {
       "file": "assets/vendor/montage/montage.mjs",
@@ -390,8 +391,8 @@
     },
     {
       "file": "assets/vendor/montage/planner-worker.js",
-      "bytes": 8834,
-      "sha256": "4b25a847eeebada8e7262afc2e9d446f63948b25f13549f17d35fdef7bfde8b7"
+      "bytes": 8836,
+      "sha256": "a4510c7869ee827c22943ef1af4a5f37b37cbdc62101fd1596fe25193efe90ce"
     },
     {
       "file": "assets/vendor/montage/recording.mjs",
@@ -430,8 +431,8 @@
     },
     {
       "file": "assets/vendor/retrotv-caption-batch.js",
-      "bytes": 2541,
-      "sha256": "45408a13e6e7fce1cbfd7226f9c7933d828116e8ac6198d0188298c9f0625272"
+      "bytes": 2549,
+      "sha256": "e069bb427a04bf66afbd54a66eedd99ab8589622b879e1d864767d982ad44048"
     },
     {
       "file": "assets/vendor/retrotv-caption-index.js",
@@ -445,8 +446,8 @@
     },
     {
       "file": "assets/vendor/retrotv-published.js",
-      "bytes": 8081,
-      "sha256": "152e6a7b624ed0bd1f25e04d73e090e1e5e5107313399d77fe967bb655cd904d"
+      "bytes": 8083,
+      "sha256": "3e29d40225db207fb70dd7d26074355858c67805b5ca76537ed4fe0214c9e7a9"
     },
     {
       "file": "assets/vendor/retrotv-worker.mjs",
@@ -460,8 +461,8 @@
     },
     {
       "file": "assets/vendor/semantic-search.js",
-      "bytes": 12993,
-      "sha256": "0fee231d4f5137f19f5d9acb218d7e1e67573381dd1d30cbb23e98c64e0cd2bb"
+      "bytes": 13005,
+      "sha256": "2b84b2ca27aa381a69634395a104da20ffbd8425f836af84a1b2b6b5c770a1a6"
     },
     {
       "file": "assets/vendor/source-cutout-worker.js",
@@ -480,8 +481,8 @@
     },
     {
       "file": "assets/vendor/transcript-store.js",
-      "bytes": 3211,
-      "sha256": "e9c81e536ebe360531314a8c5f27a4d6137b744dd24c1a9e16d3280d2faf96df"
+      "bytes": 3215,
+      "sha256": "5d7045d83d922e88ea7155ce52b85444e4891099b2ef5065e2137a578397bcb6"
     },
     {
       "file": "assets/vendor/transcript-text-pages.js",
@@ -579,9 +580,34 @@
       "sha256": "0399e9575559263a90e9633f86e4a63b5f71317dafd443d46efffe5e307ef6f5"
     },
     {
+      "file": "assets/vendor/dream/studio/model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/manifest.json",
+      "bytes": 167766,
+      "sha256": "79097b2a98b0f1cadd66351a7048a274c8a03b15fa4f857025412da6df971f01"
+    },
+    {
+      "file": "assets/vendor/dream/studio/model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/vocab.json",
+      "bytes": 1059962,
+      "sha256": "e089ad92ba36837a0d31433e555c8f45fe601ab5c221d4f607ded32d9f7a4349"
+    },
+    {
+      "file": "assets/vendor/dream/studio/model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/merges.txt",
+      "bytes": 524619,
+      "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a"
+    },
+    {
+      "file": "assets/vendor/dream/studio/model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/unet-time.f16",
+      "bytes": 2560000,
+      "sha256": "4d7c5b9bf71105a862b0f5e5179892833e3f62c0de91fa4b8fa9f1c524dadff0"
+    },
+    {
+      "file": "assets/vendor/dream/studio/model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/control-time.f16",
+      "bytes": 2560000,
+      "sha256": "5fd23fbd605f556946bfddd8439b2a2723aa8a9e41afe3e19d910a73af187df7"
+    },
+    {
       "file": "assets/semantic/search-worker.mjs",
-      "bytes": 26302,
-      "sha256": "fdb5aa3aaf6ec5ad2845e4d3da88512ae7db8f76dc0ba358a64e29fdee254e37"
+      "bytes": 26456,
+      "sha256": "f094d92ba1add7dde54b74ae7a01515b7158db9dd4b97978ec6e93b139272ad6"
     },
     {
       "file": "assets/semantic/catalogue-filters.mjs",
@@ -625,7 +651,6 @@
     "assets/vendor/concordance-worker.js",
     "assets/vendor/dream/engine-matrix.js",
     "assets/vendor/dream/engine.js",
-    "assets/vendor/dream/studio/assets.js",
     "assets/vendor/dream/studio/native-runtime.js",
     "assets/vendor/dream/webnn-spatial-engine.js",
     "assets/vendor/film-preparation-worker.js",

@@ -1,4 +1,4 @@
-import {DreamRenderer} from './client.js?v=frame-recovery3';
+import {DreamRenderer} from './client.js?v=direct-assets1';
 import {groups} from './studio/native-control-schema.js';
 import {DreamCaptionFeed} from './caption-feed.js?v=2';
 

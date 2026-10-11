@@ -22,7 +22,7 @@ globalThis.SemanticSearch=class {
  hide(){this.panel.hidden=true;document.getElementById("bThemes").setAttribute("aria-expanded","false");this.previews.suspend()}
  syncFilters(){this.catalogueFilters??=new CatalogueFilterControls(document.getElementById('semanticFilterFields'),()=>this.useSelection.checked);this.catalogueFilters.sync()}
  updateCoverage(){const m=this.info;document.getElementById('semanticCoverage').textContent=m?`Meaning index: ${m.films.toLocaleString()} films · ${m.passages.toLocaleString()} passages. Captioned coverage: ${Object.entries(m.target).map(([source,c])=>`${source} ${c.captioned.toLocaleString()} / ${c.catalogue.toLocaleString()}`).join(' · ')}. Snapshot ${new Date(m.createdAt*1000).toLocaleDateString()}; newly arriving captions remain available in Words.`:'Searches a prepared caption index. Coverage appears when loaded.'}
- ensure(){if(this.worker)return;const w=this.worker=new Worker('https://epivalent.github.io/mosh-canopy/assets/semantic/search-worker.mjs?v=pages3',{type:'module'});w.onmessage=({data:m})=>{
+ ensure(){if(this.worker)return;const w=this.worker=new Worker('https://epivalent.github.io/mosh-canopy/assets/semantic/search-worker.mjs?v=direct-assets1',{type:'module'});w.onmessage=({data:m})=>{
   if(w!==this.worker)return;
   if(m.type==='ready'){this.info=m.info;this.updateCoverage();if(!this.panel.hidden)this.counter.textContent='Index loaded · warming search models…';return}
   if(m.type==='prepared'){this.prepared=true;if(!this.panel.hidden&&!this.pending.size)this.counter.textContent='Meaning search ready';return}
@@ -84,8 +84,8 @@ class SemanticResultPreviews {
   const yt=e.p.id.startsWith('yt:');
   if(yt){e.poster='https://i.ytimg.com/vi/'+encodeURIComponent(e.p.id.slice(3))+'/hqdefault.jpg';apply()}
   try{
-   if(yt){const r=await fetch('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/retrotv/previews/films/'+encodeURIComponent(e.p.id.slice(3))+'.json',{signal});const meta=r.ok?await r.json():null;e.urls={poster:e.poster,animation:meta?.status==='ready'?meta.preview?.url:null}}
-   else{const r=await fetch('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/film-shots/'+encodeURIComponent(e.p.id)+'.json',{signal});const shots=r.ok?await r.json():[];const shot=shots.find(s=>s.start<=e.p.start&&s.end>e.p.start)||shots[0];
+   if(yt){const r=await fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/retrotv/previews/films/'+encodeURIComponent(e.p.id.slice(3))+'.json',{signal});const meta=r.ok?await r.json():null;e.urls={poster:e.poster,animation:meta?.status==='ready'?meta.preview?.url:null}}
+   else{const r=await fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/film-shots/'+encodeURIComponent(e.p.id)+'.json',{signal});const shots=r.ok?await r.json():[];const shot=shots.find(s=>s.start<=e.p.start&&s.end>e.p.start)||shots[0];
     e.poster=shot?.mp4?.replace('/clips/','/thumbnails/').replace(/\.mp4(?=\?|$)/,'.jpg');e.urls={poster:e.poster};
    }
    apply();

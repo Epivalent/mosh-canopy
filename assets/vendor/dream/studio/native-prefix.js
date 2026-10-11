@@ -1,5 +1,5 @@
-import {NativeRuntime} from './native-runtime.js?v=flow5';
-import {NativeTokenizer} from './native-tokenizer.js';
+import {NativeRuntime} from './native-runtime.js?v=direct-assets1';
+import {NativeTokenizer} from './native-tokenizer.js?v=direct-assets1';
 import {numberToHalfBits} from './platform.js';
 const half=values=>Uint16Array.from(values,numberToHalfBits);
 export function nativeSchedule(manifest,index,passes){
@@ -12,11 +12,11 @@ export class NativePrefix {
  async load(progress){
   this.r=await new NativeRuntime(progress).load('gpu');const r=this.r;
   this.stagePrefix=r.manifest.models['gpu-unet-last-1']?'gpu-':'';this.run=(name,feeds)=>r.execute(name==='tail-ane'?name:this.stagePrefix+name,feeds);
-  this.tokenizer=await NativeTokenizer.load(r.base,r.manifest.tokenizer);
+  this.tokenizer=await NativeTokenizer.load(r.metadataBase,r.manifest.tokenizer,r.assets);
   this.textRuntime=await new NativeRuntime(progress).load('webgpu');
   this.textSession=await this.textRuntime.session('text');
   this.embedding=await r.tensor([1,1024,1,77]);
-  this.times={};for(const k of ['unet','control'])this.times[k]=new Uint16Array(await(await fetch(r.base+k+'-time.f16')).arrayBuffer());
+  this.times={};for(const k of ['unet','control'])this.times[k]=new Uint16Array(await r.assets.read(r.metadataBase+k+'-time.f16',k+' time table','dream-turbo-512-metadata-v1'));
   this.input={sample:await r.tensor([1,4,64,64]),guide:await r.tensor([1,3,512,512]),strength:await r.tensor([1,1,1,1]),background:await r.tensor([1,4,64,64]),edit_mask:await r.tensor([1,1,64,64]),coeff:await r.tensor([1,4,1,1]),next_coeff:await r.tensor([1,2,1,1]),next_noise:await r.tensor([1,4,64,64]),time_embedding:await r.tensor([1,1280,1,1])};
   this.ones=await r.tensor([1,1,64,64],new Uint16Array(4096).fill(numberToHalfBits(1)));
   this.controlTime=await r.tensor([1,1280,1,1]);

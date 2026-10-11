@@ -2,12 +2,12 @@
 (() => {
   'use strict';
   const SIZE = 640, GRID = 160, PIXELS = GRID * GRID;
-  const paths = { coco: 'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/models/yolo11m-seg.onnx', open: 'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/models/yoloe-11s-seg-pf.onnx' };
+  const paths = { coco: 'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/models/yolo11m-seg.onnx', open: 'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/models/yoloe-11s-seg-pf.onnx' };
   let namesPromise;
   const sessions = {}, providers = {};
   const work = new OffscreenCanvas(SIZE, SIZE);
   const context = work.getContext('2d', { willReadFrequently: true });
-  function names(){ return namesPromise ||= fetch('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/models/classes.json').then(r => { if (!r.ok) throw Error('Segmentation labels unavailable'); return r.json(); }).catch(e=>{namesPromise=null;throw e;}); }
+  function names(){ return namesPromise ||= fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/models/classes.json').then(r => { if (!r.ok) throw Error('Segmentation labels unavailable'); return r.json(); }).catch(e=>{namesPromise=null;throw e;}); }
   async function session(kind,progress=()=>{}){
     if(!sessions[kind])progress({stage:"loading",kind});
     if (!sessions[kind]) sessions[kind] = (async () => {

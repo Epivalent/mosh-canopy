@@ -17,7 +17,7 @@ onmessage=async({data})=>{const {id,text,seed=1,maxGap=.65,selection,previousFil
   const scope=selection?CatalogueSelection.normalize(selection):null;
   const useMIA=!scope||CatalogueSelection.usesMIA(scope);
   const useRetro=!scope||CatalogueSelection.usesYouTube(scope);
-  const publication=useMIA?(miaPublication??=new RetroPublishedCaptions('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/transcripts/search/')):null;
+  const publication=useMIA?(miaPublication??=new RetroPublishedCaptions('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/search/')):null;
   const retro=useRetro?(retroPublication??=new RetroCaptionIndex()):null;
   const selectionKey=JSON.stringify(scope);if(selectedScope?.key!==selectionKey)selectedScope={key:selectionKey,task:metadata.selection(scope)};
   const [catalog,retroCatalog,filter,neonCatalog]=await Promise.all([useMIA?metadata.mia():new Map(),useRetro&&scope?.source!=='neon'?metadata.retro():null,selectedScope.task,useRetro?metadata.neon():null]);

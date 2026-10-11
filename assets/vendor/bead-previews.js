@@ -28,13 +28,13 @@ window.BeadPreviews=class BeadPreviews {
    const abort=()=>{this.worker.postMessage({type:'cancelSamples',token});finish(new DOMException('Preview sampling cancelled','AbortError'));};
    const finish=(error,data)=>{this.samples.delete(token);signal?.removeEventListener('abort',abort);error?reject(error):resolve(data);};
    this.samples.set(token,{finish});signal?.addEventListener('abort',abort,{once:true});
-   try{this.worker.postMessage({type:'samples',token,count,url:'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/retrotv/previews/films/'+encodeURIComponent(clip.retro.youtubeId)+'.json',poster:'https://i.ytimg.com/vi/'+encodeURIComponent(clip.retro.youtubeId)+'/hqdefault.jpg'});}catch(e){finish(e);}
+   try{this.worker.postMessage({type:'samples',token,count,url:'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/retrotv/previews/films/'+encodeURIComponent(clip.retro.youtubeId)+'.json',poster:'https://i.ytimg.com/vi/'+encodeURIComponent(clip.retro.youtubeId)+'/hqdefault.jpg'});}catch(e){finish(e);}
   });
  }
  ensure(clip){
   if(!clip?.retro)return;let s=this.entries.get(clip.id);if(s)return s;
   s={id:clip.id,clip,token:++this.serial,status:'loading',lastFrame:-1};this.entries.set(clip.id,s);
-  this.worker.postMessage({type:'load',id:clip.id,token:s.token,url:'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/retrotv/previews/films/'+encodeURIComponent(clip.retro.youtubeId)+'.json',width:this.width,height:this.height,maxTextureSize:this.maxTextureSize});return s;
+  this.worker.postMessage({type:'load',id:clip.id,token:s.token,url:'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/retrotv/previews/films/'+encodeURIComponent(clip.retro.youtubeId)+'.json',width:this.width,height:this.height,maxTextureSize:this.maxTextureSize});return s;
  }
  prefetch(clips){this.prepared=new Set(clips.filter(c=>c.retro));for(const c of this.prepared)this.ensure(c);this.reap();}
  update(clips){

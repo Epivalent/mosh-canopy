@@ -13,7 +13,7 @@ const product=s=>s.reduce((a,b)=>a*b,1);
 
 export class DreamEngine {
   constructor(progress=()=>{}){this.progress=progress;this.sessions={};this.loadCount=0;this.frameCount=0;this.epoch=0;this.settings={steps:1,strength:.7,imageScale:0,memory:true,mix:.85,motion:true,maxFps:8,seed:42};}
-  async load(canvas,{backend='webgpu',layout='NHWC',capture=true,staged=true,stageBatch=8,profile=false,stagesManifest=null,disableOptimizers=null,modelBase=new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/vendor/dream/models/256/',import.meta.url).href}={}){
+  async load(canvas,{backend='webgpu',layout='NHWC',capture=true,staged=true,stageBatch=8,profile=false,stagesManifest=null,disableOptimizers=null,modelBase=new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/vendor/dream/models/256/',import.meta.url).href}={}){
     this.disableOptimizers=disableOptimizers;this.stagesManifest=stagesManifest;this.stageBatch=Math.max(1,Math.min(40,Math.floor(Number(stageBatch))||1));this.profile=profile;this.base=modelBase;this.backend=backend;this.layout=layout;this.capture=backend==='webgpu'&&capture;this.staged=backend==='webgpu'&&staged;
     const {report}=await inspectGPU();this.platform=report;this.progress('GPU: '+report.gpu+' · FP16');this.progress('Reading model manifest');
     const r=await fetch(this.base+'manifest-fusion-v3.json');if(!r.ok)throw Error('Browser model export is missing');this.manifest=await r.json();

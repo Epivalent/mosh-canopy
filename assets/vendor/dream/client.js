@@ -36,7 +36,7 @@ export class DreamRenderer {
   for(const role of ['encoder','fast','prefix']){
    if(this.disposed)throw new DOMException('Disposed','AbortError');
    await new Promise((resolve,reject)=>{
-    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=frame-recovery3',import.meta.url),{type:'module'});this.stages[role]='Loading';
+    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=direct-assets1',import.meta.url),{type:'module'});this.stages[role]='Loading';
     const fail=message=>{this.stages[role]='Error';reject(Error(message));this.onError(message);};w.onerror=e=>fail(role+': '+e.message);
     w.onmessage=({data:d})=>{
      if(this.disposed){d.bitmap?.close();return;}

@@ -1,6 +1,6 @@
 /* Shared, immutable caption files and byte-sharded term postings. */
 globalThis.RetroPublishedCaptions=class RetroPublishedCaptions{
- constructor(root='https://mosh-canopy-assets.moshcanopy.workers.dev/assets/retrotv/captions/'){this.root=new URL(root,location.origin);this.lexicons=new Map();this.ordinals=new Map();this.cache=new Map();this.pending=new Map();this.queryRevision=0;this.ready=this.load();}
+ constructor(root='https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/retrotv/captions/'){this.root=new URL(root,location.origin);this.lexicons=new Map();this.ordinals=new Map();this.cache=new Map();this.pending=new Map();this.queryRevision=0;this.ready=this.load();}
  load(){
   // Coverage, searches and playback share the same refresh. Commit docs, states
   // and the index together so no reader sees mismatched publication revisions.

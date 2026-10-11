@@ -1,7 +1,8 @@
 // CLIP byte-level BPE, using the SD-Turbo checkpoint's own vocabulary/merges.
 export class NativeTokenizer {
- static async load(base,spec){
-  const [vocab,merges]=await Promise.all([fetch(base+spec.vocab).then(r=>r.json()),fetch(base+spec.merges).then(r=>r.text())]);
+ static async load(base,spec,assets){
+  const vocab=await assets.json(base+spec.vocab,'Dream tokenizer vocabulary','dream-turbo-512-metadata-v1');
+  const merges=new TextDecoder().decode(await assets.read(base+spec.merges,'Dream tokenizer merges','dream-turbo-512-metadata-v1'));
   return new NativeTokenizer(vocab,merges,spec);
  }
  constructor(vocab,merges,spec){

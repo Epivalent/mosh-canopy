@@ -15,9 +15,9 @@ self.TranscriptStore=class TranscriptStore {
   });
  }
  invalidate(id){this.cache.delete(id);this.pending.delete(id);}
- async refresh(){const r=await fetch(new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/transcripts/index.json',self.location.origin),{cache:'no-cache'});if(!r.ok)throw Error('Transcript manifest: HTTP '+r.status);return this.metadata=await r.json();}
+ async refresh(){const r=await fetch(new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/index.json',self.location.origin),{cache:'no-cache'});if(!r.ok)throw Error('Transcript manifest: HTTP '+r.status);return this.metadata=await r.json();}
  async read(file,priority='low'){
-  const r=await fetch(new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/transcripts/'+file,self.location.origin),{cache:'force-cache',priority});if(!r.ok)throw Error('Transcript: HTTP '+r.status);
+  const r=await fetch(new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/'+file,self.location.origin),{cache:'force-cache',priority});if(!r.ok)throw Error('Transcript: HTTP '+r.status);
   return new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json();
  }
  expand(f){if(f?.words?.length&&Array.isArray(f.words[0]))f.words=f.words.map(([start,end,text])=>({start,end,text}));return f;}

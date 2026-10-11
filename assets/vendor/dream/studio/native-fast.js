@@ -1,5 +1,5 @@
 import {NativePresent} from './native-present.js?v=flow5';
-import {NativeRuntime} from './native-runtime.js?v=flow5';
+import {NativeRuntime} from './native-runtime.js?v=direct-assets1';
 import {nativeSchedule} from './native-prefix.js?v=flow5';
 import {noiseBank} from './native-noise.js';
 import {numberToHalfBits} from './platform.js';

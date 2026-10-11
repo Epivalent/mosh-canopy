@@ -1,13 +1,14 @@
 // Browser-only model ownership. No TD endpoints, Python or native helper.
 import * as ort from './ort/ort.all.bundle.min.mjs';
-import {DreamAssets} from './assets.js';
+import {DreamAssets} from './assets.js?v=direct-assets1';
 
 export class NativeRuntime {
   constructor(progress=()=>{}) { this.progress=progress; this.sessions=new Map(); this.tensors=new Set(); }
   async load(provider='npu') {
-    this.provider=provider; this.assets=new DreamAssets(this.progress);
-    this.base=new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/vendor/dream/studio/turbo-models/',import.meta.url).href;
-    this.manifest=await(await fetch(this.base+'manifest.json',{cache:'no-store'})).json();
+    this.provider=provider; this.assets=new DreamAssets(this.progress,{legacyOrigins:["https://mosh-canopy-assets.moshcanopy.workers.dev"]});
+    this.base=new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/vendor/dream/studio/turbo-models/',import.meta.url).href;
+    this.metadataBase=new URL('./model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/',import.meta.url).href;
+    this.manifest=await this.assets.json(this.metadataBase+'manifest.json','Dream model manifest');
     ort.env.wasm.numThreads=1;
     ort.env.wasm.wasmPaths=new URL('./ort/',import.meta.url).href;
     ort.env.wasm.wasmBinary=await this.assets.read(new URL('./ort/ort-wasm-simd-threaded.jsep.wasm',import.meta.url).href,'Browser runtime','dream-runtime-ort-1.30.0');

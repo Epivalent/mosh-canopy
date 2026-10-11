@@ -1,7 +1,7 @@
 // Persistent browser workers. Each queue keeps only the latest complete packet.
-import {NativeRuntime} from './native-runtime.js?v=flow5';
-import {NativePrefix,nativeSchedule} from './native-prefix.js?v=live-controls1';
-import {NativeFast} from './native-fast.js?v=caption-feed2';
+import {NativeRuntime} from './native-runtime.js?v=direct-assets1';
+import {NativePrefix,nativeSchedule} from './native-prefix.js?v=direct-assets1';
+import {NativeFast} from './native-fast.js?v=direct-assets1';
 import {noiseBank} from './native-noise.js';
 import {StudioGPU} from './studio-gpu.js?v=1';
 import {NativeImageUpload} from './native-image-upload.js';

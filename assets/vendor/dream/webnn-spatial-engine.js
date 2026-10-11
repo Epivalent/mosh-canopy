@@ -5,7 +5,7 @@ import {numberToHalfBits} from './platform.js';
 export class SpatialDreamEngine extends ResidentWebNNEngine{
  constructor(progress){super(progress);this.settings.geometryScale=1;}
  async load(canvas,options={}){
-  const base=options.modelBase||new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/vendor/dream/models/256/',import.meta.url).href;
+  const base=options.modelBase||new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/vendor/dream/models/256/',import.meta.url).href;
   this.spatial=await(await fetch(base+'manifest-spatial.json')).json();
   this.anchorFactor=options.anchorFactor||0;
   if(this.anchorFactor){
