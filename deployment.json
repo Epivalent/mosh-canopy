@@ -5,8 +5,8 @@
   "files": [
     {
       "file": "index.html",
-      "bytes": 255474,
-      "sha256": "afa11822ae60dafc6cdad792f9ef70cc4392c51faacf8a903ea7f773e481e394"
+      "bytes": 255479,
+      "sha256": "985c9ad7e141f3e4a9f6595daa68e5dd2a37a8a9ca88430250f6bd7766960dd8"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -460,8 +460,8 @@
     },
     {
       "file": "assets/vendor/semantic-search.js",
-      "bytes": 12988,
-      "sha256": "f2aa434c8a6730a026521eb2013b68982a2224cf570418880a1cb7d330da30cf"
+      "bytes": 12993,
+      "sha256": "bfae0c9b3a8a963a24b67a48f2e4cb1d59ca5ffa17ab3dc3c0430825132a0f64"
     },
     {
       "file": "assets/vendor/source-cutout-worker.js",
@@ -580,8 +580,8 @@
     },
     {
       "file": "assets/semantic/search-worker.mjs",
-      "bytes": 26166,
-      "sha256": "02c5b69f363cedc312e358fb3080c7be4b91465ff4758e85ba6e19650e0ed682"
+      "bytes": 26249,
+      "sha256": "9dd470f6b0b0a32b755a48125eb2f043c9397a5a82d1f541bcaff13b5333910c"
     },
     {
       "file": "assets/semantic/catalogue-filters.mjs",
