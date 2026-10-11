@@ -1,0 +1,10 @@
+{
+  "name": "@moshcanopy/dream-diffusion",
+  "version": "0.3.0",
+  "type": "module",
+  "exports": {
+    ".": "./feature.js",
+    "./renderer": "./client.js"
+  },
+  "description": "Resident browser SD-Turbo 512 studio: asynchronous feature refresh, ANE neural evolution and GPU composition"
+}

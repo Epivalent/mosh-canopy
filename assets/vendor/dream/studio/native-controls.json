@@ -1,0 +1,716 @@
+{
+  "source": "Snapshot of TD artist controls; no TD runtime connection",
+  "controls": [
+    {
+      "name": "Movie",
+      "label": "Movie source",
+      "value": "/Users/mac/ishly.mp4",
+      "style": "File",
+      "readOnly": false
+    },
+    {
+      "name": "Features",
+      "label": "Feature extraction",
+      "value": "external",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "luma",
+        "edges",
+        "motion",
+        "external"
+      ],
+      "menuLabels": [
+        "Luminance",
+        "Edges",
+        "Frame difference",
+        "External segmentation mask"
+      ]
+    },
+    {
+      "name": "Externalmask",
+      "label": "External mask TOP",
+      "value": "/project1/RegionDream/FOREGROUND_EXTRACT/alpha_to_foreground_matte",
+      "style": "TOP",
+      "readOnly": false
+    },
+    {
+      "name": "Threshold",
+      "label": "Feature threshold",
+      "value": 0.255,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Invert",
+      "label": "Invert selection",
+      "value": false,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Featureblur",
+      "label": "Feature blur (pixels)",
+      "value": 1,
+      "style": "Int",
+      "readOnly": false,
+      "min": 1.0,
+      "max": 31.0
+    },
+    {
+      "name": "Feather",
+      "label": "Composite feather (pixels)",
+      "value": 3,
+      "style": "Int",
+      "readOnly": false,
+      "min": 1.0,
+      "max": 41.0
+    },
+    {
+      "name": "Inputmode",
+      "label": "Diffusion input",
+      "value": "masked",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "rgb",
+        "masked",
+        "texture"
+      ],
+      "menuLabels": [
+        "Original full-frame RGB",
+        "Foreground-masked RGB",
+        "Texture inside foreground"
+      ]
+    },
+    {
+      "name": "Texturemix",
+      "label": "Texture mix",
+      "value": 0.43799999356269836,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Renderres",
+      "label": "Diffusion grid (512 = native)",
+      "value": "512",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "128",
+        "160",
+        "192",
+        "256",
+        "320",
+        "384",
+        "512"
+      ],
+      "menuLabels": [
+        "128 x 128 / changes generation",
+        "160 x 160 / changes generation",
+        "192 x 192 / changes generation",
+        "256 x 256 / changes generation",
+        "320 x 320 / changes generation",
+        "384 x 384 / changes generation",
+        "512 x 512 / native grid"
+      ]
+    },
+    {
+      "name": "Running",
+      "label": "Run resident diffusion models",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Prompt",
+      "label": "Prompt",
+      "value": "hyperreal",
+      "style": "Str",
+      "readOnly": false
+    },
+    {
+      "name": "Stepindex",
+      "label": "Source structure (higher = closer)",
+      "value": 12,
+      "style": "Int",
+      "readOnly": false,
+      "min": 1.0,
+      "max": 49.0
+    },
+    {
+      "name": "Seed",
+      "label": "Seed",
+      "value": 390863,
+      "style": "Int",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 999999.0
+    },
+    {
+      "name": "Noise",
+      "label": "Noise",
+      "value": 1.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.5
+    },
+    {
+      "name": "Blendmode",
+      "label": "Blend mode",
+      "value": "normal",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "normal",
+        "softlight",
+        "overlay",
+        "screen",
+        "multiply",
+        "difference",
+        "add"
+      ],
+      "menuLabels": [
+        "Normal",
+        "Softlight",
+        "Overlay",
+        "Screen",
+        "Multiply",
+        "Difference",
+        "Add"
+      ]
+    },
+    {
+      "name": "Blendamount",
+      "label": "Effect mix",
+      "value": 1.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Maskoutput",
+      "label": "Restrict output to features",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Passes",
+      "label": "Denoising passes",
+      "value": "2",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "1",
+        "2",
+        "4"
+      ],
+      "menuLabels": [
+        "1 pass",
+        "2 passes",
+        "4 passes"
+      ]
+    },
+    {
+      "name": "Spatial",
+      "label": "Spatial guidance (ControlNet)",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Controlstrength",
+      "label": "Spatial guidance strength",
+      "value": 0.5,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 2.0
+    },
+    {
+      "name": "Guidemode",
+      "label": "Spatial guide",
+      "value": "canny",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "outline",
+        "details",
+        "canny"
+      ],
+      "menuLabels": [
+        "Legacy foreground outline",
+        "Legacy thick edges",
+        "Thin Canny / RGB coordinates"
+      ]
+    },
+    {
+      "name": "Look",
+      "label": "Image pipeline",
+      "value": "studio",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "region",
+        "studio"
+      ],
+      "menuLabels": [
+        "Foreground experiment",
+        "Web studio look"
+      ]
+    },
+    {
+      "name": "Copystudio",
+      "label": "Copy current stream.html look",
+      "value": false,
+      "style": "Pulse",
+      "readOnly": false
+    },
+    {
+      "name": "Restoreregion",
+      "label": "Restore previous foreground settings",
+      "value": false,
+      "style": "Pulse",
+      "readOnly": false
+    },
+    {
+      "name": "Preparation",
+      "label": "Studio input preparation",
+      "value": "1",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "0",
+        "1",
+        "2"
+      ],
+      "menuLabels": [
+        "Raw RGB",
+        "Textured silhouette",
+        "Textured edges"
+      ]
+    },
+    {
+      "name": "Studiothreshold",
+      "label": "Studio threshold",
+      "value": 0.305,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Inputgain",
+      "label": "Input feedback gain",
+      "value": 0.5479999780654907,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Persistence",
+      "label": "Input persistence",
+      "value": 0.672,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 0.999
+    },
+    {
+      "name": "Textureperiod",
+      "label": "Texture period",
+      "value": 0.106,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Texturespeed",
+      "label": "Texture motion",
+      "value": 0.05,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 0.5
+    },
+    {
+      "name": "Cloudperiod",
+      "label": "Cloud period",
+      "value": 0.295,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 4.0
+    },
+    {
+      "name": "Outputgain",
+      "label": "Output feedback gain",
+      "value": 0.25,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Outputpersistence",
+      "label": "Output persistence",
+      "value": 0.601,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 0.999
+    },
+    {
+      "name": "Originalmix",
+      "label": "Original in final output",
+      "value": 0.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Inputfeedback",
+      "label": "Input feedback",
+      "value": false,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Outputfeedback",
+      "label": "Output feedback",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Clouds",
+      "label": "Coarse texture modulation",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Resetstudio",
+      "label": "Reset studio feedback",
+      "value": false,
+      "style": "Pulse",
+      "readOnly": false
+    },
+    {
+      "name": "Inputres",
+      "label": "Input detail (grid unchanged)",
+      "value": "native",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "native",
+        "128",
+        "256",
+        "512"
+      ],
+      "menuLabels": [
+        "Same as diffusion grid",
+        "128 detail",
+        "256 detail",
+        "512 detail"
+      ]
+    },
+    {
+      "name": "Cannylow",
+      "label": "Canny low threshold",
+      "value": 100.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 400.0
+    },
+    {
+      "name": "Cannyhigh",
+      "label": "Canny high threshold",
+      "value": 200.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 400.0
+    },
+    {
+      "name": "Backend",
+      "label": "Resident inference devices",
+      "value": "stream",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "mlx",
+        "ane",
+        "dual",
+        "stream",
+        "Stream \u00b7 independent input + ANE decode (512)"
+      ],
+      "menuLabels": [
+        "Metal / MLX",
+        "Core ML / ANE (512)",
+        "Dual ANE + Metal (512)",
+        "ANE continuous UNet tail (experimental)",
+        "Stream \u00b7 independent input + ANE decode (512)"
+      ]
+    },
+    {
+      "name": "Composition",
+      "label": "Neural composition",
+      "value": "final",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "off",
+        "context",
+        "final"
+      ],
+      "menuLabels": [
+        "Off / original diffusion",
+        "Source context every pass",
+        "Joint final pass (1 pass: context)"
+      ]
+    },
+    {
+      "name": "Editpadding",
+      "label": "Latent edit region expansion (px)",
+      "value": 39.285,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 96.0
+    },
+    {
+      "name": "Source",
+      "label": "Video source",
+      "value": "2",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "0",
+        "2"
+      ],
+      "menuLabels": [
+        "Movie TOP",
+        "Brave MRT / YouTube bridge"
+      ]
+    },
+    {
+      "name": "Sourceid",
+      "label": "Browser film ID",
+      "value": "UVUatYPScjw:1791184049214",
+      "style": "Str",
+      "readOnly": false
+    },
+    {
+      "name": "Openmrt",
+      "label": "Open MRT chooser",
+      "value": false,
+      "style": "Pulse",
+      "readOnly": false
+    },
+    {
+      "name": "Edgenoise",
+      "label": "Canny shapes input noise",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Edgenoiseamount",
+      "label": "Contour/noise coupling",
+      "value": 0.3330000042915344,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "name": "Noiseflat",
+      "label": "Noise in flat areas",
+      "value": 0.8820000290870667,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 2.0
+    },
+    {
+      "name": "Noisecontour",
+      "label": "Noise near contours",
+      "value": 0.28999999165534973,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 2.0
+    },
+    {
+      "name": "Noisewidth",
+      "label": "Contour neighbourhood (pixels)",
+      "value": 4,
+      "style": "Int",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 12.0
+    },
+    {
+      "name": "Opennoiseramp",
+      "label": "Open noise ramp",
+      "value": false,
+      "style": "Pulse",
+      "readOnly": false
+    },
+    {
+      "name": "Latentfreedom",
+      "label": "Extra denoising between image updates",
+      "value": "99",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "0",
+        "99",
+        "199"
+      ],
+      "menuLabels": [
+        "Retain exactly",
+        "Small latent freedom",
+        "More latent freedom"
+      ]
+    },
+    {
+      "name": "Inputlimit",
+      "label": "Maximum input preparations / sec",
+      "value": 30,
+      "style": "Int",
+      "readOnly": false,
+      "min": 1.0,
+      "max": 60.0
+    },
+    {
+      "name": "Fasttail",
+      "label": "Fresh-input final-block refresh (experimental)",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Inputdevice",
+      "label": "Image encoder device",
+      "value": "mlx",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "mlx",
+        "ane"
+      ],
+      "menuLabels": [
+        "Metal / MLX",
+        "Core ML / ANE"
+      ]
+    },
+    {
+      "name": "Transformdevice",
+      "label": "Final UNet residual + attention device",
+      "value": "ane",
+      "style": "Menu",
+      "readOnly": false,
+      "menuNames": [
+        "ane",
+        "mlx"
+      ],
+      "menuLabels": [
+        "ANE",
+        "Metal / MLX"
+      ]
+    },
+    {
+      "name": "Anchorlimit",
+      "label": "Deep feature refresh limit / sec",
+      "value": 4.909999847412109,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.5,
+      "max": 5.0
+    },
+    {
+      "name": "Progressivefeatures",
+      "label": "Release deep features as each timestep completes",
+      "value": false,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Pipelineframes",
+      "label": "Pipeline different frames across 4 passes (A/B)",
+      "value": false,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Continuousstate",
+      "label": "Retain evolving latent across input updates",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    },
+    {
+      "name": "Sourceresponse",
+      "label": "Source response (ms)",
+      "value": 0.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 300.0
+    },
+    {
+      "name": "Featureresponse",
+      "label": "Deep-feature handoff (ms)",
+      "value": 0.0,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 300.0
+    },
+    {
+      "name": "Sourceinfluence",
+      "label": "Incoming source influence",
+      "value": 0.4309999942779541,
+      "style": "Float",
+      "readOnly": false,
+      "min": 0.0,
+      "max": 2.0
+    },
+    {
+      "name": "Evolutionrate",
+      "label": "Evolution steps per second of time",
+      "value": 10.100000381469727,
+      "style": "Float",
+      "readOnly": false,
+      "min": 1.0,
+      "max": 40.0
+    },
+    {
+      "name": "Resetflow",
+      "label": "Reinitialize evolving state",
+      "value": false,
+      "style": "Pulse",
+      "readOnly": false
+    },
+    {
+      "name": "Fusedtailinput",
+      "label": "ANE input preparation (A/B)",
+      "value": true,
+      "style": "Toggle",
+      "readOnly": false
+    }
+  ]
+}

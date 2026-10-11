@@ -1,0 +1,18 @@
+{
+  "architecture": "browser-studio-sd-turbo-512",
+  "model": "stabilityai/sd-turbo",
+  "codec": "madebyollin/taesd",
+  "spatialGuidance": "SD 2.1 Canny ControlNet",
+  "resolution": [
+    512,
+    512
+  ],
+  "runtime": "WebNN + WebGPU + WebGL2, entirely in browser",
+  "source": "dlss/app/retro/dream/native-live.html",
+  "runtimeManifest": "studio/provenance.json",
+  "controlSchema": "studio/native-control-schema.js",
+  "controlValues": "studio/native-controls.json",
+  "syncCommand": "node scripts/sync-dream-studio.mjs [source-directory]",
+  "modelIncluded": true,
+  "legacyLCMUsed": false
+}
