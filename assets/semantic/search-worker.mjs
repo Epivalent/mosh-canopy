@@ -17,7 +17,7 @@ const yieldWorker=()=>globalThis.scheduler?.yield?globalThis.scheduler.yield():n
 function checkCurrent(s){if(s.id!==latestId)throw Error("Search superseded");}
 const PAGE=10; // UI result cards per page, not a restriction on the searchable corpus.
 const status=message=>postMessage({type:'status',message});
-async function checked(url,options){const r=await fetch(new URL(url,import.meta.url),options);if(!r.ok)throw Error(`${url}: HTTP ${r.status}`);return r}
+async function checked(url,options){const r=await fetch(new URL(url,'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/semantic/'),options);if(!r.ok)throw Error(`${url}: HTTP ${r.status}`);return r}
 async function json(url){const b=await(await checked(url)).arrayBuffer();if(new Uint8Array(b)[0]===31){const raw=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).text();return JSON.parse(raw)}return JSON.parse(new TextDecoder().decode(b))}
 const asset=name=>new URL(meta.base+name,'https://mosh-canopy-assets.moshcanopy.workers.dev/assets/semantic/').href;
 const buffer=(data,usage)=>{const b=device.createBuffer({size:Math.ceil((typeof data==='number'?data:data.byteLength)/4)*4,usage});if(typeof data!=='number')device.queue.writeBuffer(b,0,data);return b};
