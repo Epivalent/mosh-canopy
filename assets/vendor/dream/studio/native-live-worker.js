@@ -46,8 +46,8 @@ export class Encoder {
 async function drain(){
  if(busy||!ready||!pending||!active)return;busy=true;
  try{
-  while(pending&&active){const item=pending;pending=null;const ticketEpoch=item.meta.epoch;if(ticketEpoch!==epoch){item.image?.close();continue;}
-   if(role==='encoder'){const packet=await engine.encode(item);if(ticketEpoch===epoch)send('source',{packet});send('inputReady');}
+  while(pending&&active){const item=pending;pending=null;const ticketEpoch=item.meta.epoch;if(ticketEpoch!==epoch){item.image?.close();if(role==='encoder')send('inputReady',{meta:item.meta});continue;}
+   if(role==='encoder'){try{const packet=await engine.encode(item);if(ticketEpoch===epoch)send('source',{packet});}finally{send('inputReady',{meta:item.meta});}}
    if(role==='prefix'){
     const settings={...cfg},bank=noises;const steps=nativeSchedule(engine.r.manifest,settings.index,settings.passes),sample=new Uint16Array(item.encoded.length);
     for(let i=0;i<sample.length;i++)sample[i]=f16(f32(item.encoded[i])*steps[0].coeff[0]+f32(bank[0][i])*steps[0].coeff[1]*settings.noise);
@@ -55,7 +55,7 @@ async function drain(){
     if(ticketEpoch===epoch)send('prefixMetric',{ms:performance.now()-start,meta:item.meta});
    }
   }
- }catch(e){send('error',{error:e.stack||String(e)});if(role==='encoder')send('inputReady');}finally{busy=false;}
+ }catch(e){send('error',{error:e.stack||String(e)});}finally{busy=false;}
 }
 async function fastLoop(){
  let previous;

@@ -11,6 +11,7 @@ export class DreamRenderer {
   this.capture=document.createElement('canvas');this.capture.width=this.capture.height=512;this.captureContext=this.capture.getContext('2d');
  }
  modelConfig(){const s=this.settings;return {prompt:s.Prompt||'',index:Number(s.Stepindex),passes:Number(s.Passes),seed:Number(s.Seed),noise:Number(s.Noise),spatial:!!s.Spatial,controlStrength:Number(s.Controlstrength),sourceInfluence:Number(s.Sourceinfluence),evolutionRate:Number(s.Evolutionrate),composition:'off'};}
+ acknowledgeInput(meta){if(meta&&meta.epoch===this.inputTicket?.epoch&&meta.input_seq===this.inputTicket?.input_seq){this.inputBusy=false;this.inputTicket=null;}}
  broadcast(){for(const w of Object.values(this.workers))w.postMessage({type:'configure',epoch:this.epoch,cfg:this.modelConfig(),active:this.running&&!!this.settings.Running&&!document.hidden});}
  configure(values,pulses=[]){
   this.settings={...this.settings,...values};
@@ -35,14 +36,14 @@ export class DreamRenderer {
   for(const role of ['encoder','fast','prefix']){
    if(this.disposed)throw new DOMException('Disposed','AbortError');
    await new Promise((resolve,reject)=>{
-    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=caption-feed2',import.meta.url),{type:'module'});this.stages[role]='Loading';
+    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=frame-recovery3',import.meta.url),{type:'module'});this.stages[role]='Loading';
     const fail=message=>{this.stages[role]='Error';reject(Error(message));this.onError(message);};w.onerror=e=>fail(role+': '+e.message);
     w.onmessage=({data:d})=>{
      if(this.disposed){d.bitmap?.close();return;}
      if(d.type==='status'){this.stages[role]=d.message;this.onStatus(role+': '+d.message);}
      if(d.type==='error')fail(role+': '+d.error);
      if(d.type==='ready'){this.stages[role]='Ready';resolve();}
-     if(d.type==='inputReady')this.inputBusy=false;
+     if(d.type==='inputReady')this.acknowledgeInput(d.meta);
      if(d.type==='source'&&d.packet.meta.epoch===this.epoch){this.encodeMs=d.packet.encodeMs;this.cannyMs=d.packet.cannyMs;this.workers.fast.postMessage({type:'source',packet:d.packet});this.workers.prefix.postMessage({type:'source',packet:d.packet});}
      if(d.type==='feature'&&d.packet.meta.epoch===this.epoch)this.workers.fast.postMessage({type:'feature',packet:d.packet});
      if(d.type==='prefixMetric'&&d.meta.epoch===this.epoch)this.prefixMs=d.ms;
@@ -65,15 +66,15 @@ export class DreamRenderer {
    const scale=Math.min(512/frame.width,512/frame.height),w=frame.width*scale,h=frame.height*scale,rect={x:(512-w)/2,y:(512-h)/2,w,h,width:Math.round(w),height:Math.round(h)};
    const ctx=this.captureContext;ctx.fillStyle='#000';ctx.fillRect(0,0,512,512);ctx.drawImage(frame,rect.x,rect.y,w,h);frame.close();frame=null;this.gpu.source(this.capture);if(!this.gpu.ready)this.displayRect=rect;this.onFrame({time,epoch:this.epoch});
    const now=performance.now();if(!this.inputBusy&&now-this.lastInput>=1000/Number(this.settings.Inputlimit||30)){
-    this.inputBusy=true;this.lastInput=now;const meta={epoch:this.epoch,input_seq:++this.seq,time,captured:now};const settings={...this.settings,Threshold:this.settings.Studiothreshold};
+    this.inputBusy=true;this.lastInput=now;const meta={epoch:this.epoch,input_seq:++this.seq,time,captured:now};this.inputTicket=meta;const settings={...this.settings,Threshold:this.settings.Studiothreshold};
     const [image,history]=await Promise.all([createImageBitmap(this.capture),createImageBitmap(this.capture)]);
-    if(this.disposed||meta.epoch!==this.epoch){image.close();history.close();this.inputBusy=false;return;}
+    if(this.disposed||meta.epoch!==this.epoch){image.close();history.close();if(this.inputTicket===meta){this.inputBusy=false;this.inputTicket=null;}return;}
     this.histories.set(meta.input_seq,{image:history,rect});while(this.histories.size>90){const [key,saved]=this.histories.entries().next().value;saved.image.close();this.histories.delete(key);}
     this.workers.encoder.postMessage({type:'frame',packet:{image,meta,settings}},[image]);
    }
   }catch(e){this.inputBusy=false;this.onError(e.message);}finally{frame?.close();ack();}
  }
- reset(){this.epoch++;this.appliedPrompt=undefined;this.hasMatch=false;this.gpu?.resetSource();for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.results=[];this.broadcast();}
+ reset(){this.epoch++;this.inputBusy=false;this.inputTicket=null;this.appliedPrompt=undefined;this.hasMatch=false;this.gpu?.resetSource();for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.results=[];this.broadcast();}
  setRunning(value){if(this.running===!!value)return;this.running=!!value;if(this.gpu)this.gpu.lastTick=undefined;this.broadcast();}
  diagnostics(){return {ready:this.ready,backend:this.backend,epoch:this.epoch,stages:this.stages,encodeMs:this.encodeMs,cannyMs:this.cannyMs,prefixMs:this.prefixMs,inputSequence:this.seq,presentations:this.presentations,last:this.results.at(-1)};}
  dispose(){if(this.disposed)return;this.disposed=true;this.ready=false;this.running=false;this.rejectLoad?.(new DOMException('Disposed','AbortError'));for(const w of Object.values(this.workers))w.terminate();cancelAnimationFrame(this.animation);for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.gpu?.dispose();}

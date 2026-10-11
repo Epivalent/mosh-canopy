@@ -1,12 +1,12 @@
 {
-  "createdAt": "2026-10-11T15:07:04.851Z",
+  "createdAt": "2026-10-11T15:35:30.474Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 255470,
-      "sha256": "8d7f156bac29f8dcc955e8fa855c7680995ea24bf7283899c26d90317eee03d4"
+      "bytes": 255488,
+      "sha256": "81727f34a054b021c94c809b742f8d129df281166373cf0e0eb10b6306fecd89"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -105,8 +105,8 @@
     },
     {
       "file": "assets/vendor/dream/client.js",
-      "bytes": 8082,
-      "sha256": "f16be3d0531e880b8dfc72d9b15a45aaf9c4ed1098b97baa970364ebb9e3dcc9"
+      "bytes": 8372,
+      "sha256": "78362cc8584038232d07ee6bea8d9e3306b9e469879a0baee3eacdd88be387a7"
     },
     {
       "file": "assets/vendor/dream/engine-matrix.js",
@@ -125,8 +125,8 @@
     },
     {
       "file": "assets/vendor/dream/feature.js",
-      "bytes": 16103,
-      "sha256": "8b481db882450264f7f06c21d411fc093ff78ada1ac012394e19a622a27e00cb"
+      "bytes": 16488,
+      "sha256": "3a56adb188ce54980307f6a178eb8134afe0e5dca1c58fa399e5f1f7194c105a"
     },
     {
       "file": "assets/vendor/dream/gpu-canny.js",
@@ -220,8 +220,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-live-worker.js",
-      "bytes": 7737,
-      "sha256": "b838f6044024de06ae0bde1e8655d71530f37ae76da0d85007130fb7d05cc0f9"
+      "bytes": 7785,
+      "sha256": "184e6c77e164dd928bb8e2fa3641aff5d3cf76a94decfffd571ab3520fa4cb95"
     },
     {
       "file": "assets/vendor/dream/studio/native-noise.js",
@@ -310,8 +310,8 @@
     },
     {
       "file": "assets/vendor/dream-film.js",
-      "bytes": 1244,
-      "sha256": "f519bef9a17d1dab348f47618876e696831baaf0d0d2fec49f4aa49b50dfc260"
+      "bytes": 1246,
+      "sha256": "df42ccc4d1bf1969660090d0d8b72a5689ee3a14fb74b6f0074a35387ddbde33"
     },
     {
       "file": "assets/vendor/dream-playback.js",
@@ -570,8 +570,8 @@
     },
     {
       "file": "assets/vendor/youtube-direct.js",
-      "bytes": 18129,
-      "sha256": "4a893c21fdf4ae9755e59e4c040f6aae4a1cda16c2b3686bbeb28771360868ad"
+      "bytes": 18878,
+      "sha256": "6979c3f42c14eba93bc0b90a2e95f83572f45958fb321f892a742611439b4404"
     },
     {
       "file": "assets/vendor/youtube-native.js",
@@ -606,12 +606,12 @@
     {
       "file": "downloads/mosh-canopy-youtube-bridge.zip",
       "bytes": 12034,
-      "sha256": "546e216ff0220c1d01e8f0d030bea2e46191a61748a618e7b024369bd5754116"
+      "sha256": "183004c90b88b5f4c4912a07abfe31f0f8102564699cb4cebf1c0e1253909f5e"
     },
     {
       "file": "downloads/youtube-bridge.json",
       "bytes": 124,
-      "sha256": "9c0d3424cb406650e0317e8fc40e1bbd05d2f4c25ebd2c7243873e07b72ce0b7"
+      "sha256": "1fe4510a97103e6b6ed68479de098ef3b28749f102c821d5a3adfda8962c2108"
     }
   ],
   "rewrites": [
@@ -625,6 +625,7 @@
     "assets/vendor/concordance-worker.js",
     "assets/vendor/dream/engine-matrix.js",
     "assets/vendor/dream/engine.js",
+    "assets/vendor/dream/studio/assets.js",
     "assets/vendor/dream/studio/native-runtime.js",
     "assets/vendor/dream/webnn-spatial-engine.js",
     "assets/vendor/film-preparation-worker.js",
@@ -642,6 +643,7 @@
     "assets/vendor/welcome.js",
     "assets/vendor/word-helices.js",
     "assets/vendor/word-ribbon-worker.js",
-    "assets/semantic/search-worker.mjs"
+    "assets/semantic/search-worker.mjs",
+    "assets/semantic/vendor/transformers.min.js"
   ]
 }

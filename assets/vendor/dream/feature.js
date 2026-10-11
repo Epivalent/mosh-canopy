@@ -1,4 +1,4 @@
-import {DreamRenderer} from './client.js?v=caption-feed2';
+import {DreamRenderer} from './client.js?v=frame-recovery3';
 import {groups} from './studio/native-control-schema.js';
 import {DreamCaptionFeed} from './caption-feed.js?v=2';
 
@@ -61,7 +61,7 @@ export class DreamFeature {
  show(value){this.panel.hidden=!value;this.button.setAttribute('aria-expanded',String(value));}
  status(text){if(this.$('[data-role=status]').textContent===text)return;this.$('[data-role=status]').textContent=text;this.statusHistory.push({at:performance.now(),text});this.statusHistory=this.statusHistory.slice(-100);this.onStatus(text);}
  diagnostics(){return {architecture:'browser-studio-sd-turbo-512',enabled:this.enabled,active:this.active,visible:this.visible,settings:this.settings,backend:this.backend,supportError:this.supportError,failure:this.failure,failureDetails:this.failureDetails,capabilities:{secure:isSecureContext,webnn:!!navigator.ml,webgpu:!!navigator.gpu,userAgent:navigator.userAgent},clipId:this.clipId,updates:this.updates,presented:this.presented,renderer:this.renderer?.diagnostics(),startup:this.statusHistory};}
- activityStatus(){if(this.supportError||this.failure){this.panel.dataset.state='error';this.status(this.supportError||this.failure);return;}if(!this.enabled){this.status(this.renderer?.ready?'Off · compiled models stay resident':this.renderer?'Off · models are finishing their first load':'Off · no model loaded');return;}if(!this.renderer?.ready)return;this.status(!this.settings.Running?'Paused · models stay resident':!this.visible?'Ready · open a film in the large viewing frame':document.hidden?'Ready · page is in the background':this.video?.paused?'Ready · film is paused':this.video?.ended?'Ready · film has ended':this.hasResult?'Dreaming · same resident studio models':'Ready · waiting for the film’s first neural image');}
+ activityStatus(){if(this.supportError||this.failure){this.panel.dataset.state='error';this.status(this.supportError||this.failure);return;}if(!this.enabled){this.status(this.renderer?.ready?'Off · compiled models stay resident':this.renderer?'Off · models are finishing their first load':'Off · no model loaded');return;}if(!this.renderer?.ready)return;this.status(!this.settings.Running?'Paused · models stay resident':this.waitingForFrames?'Waiting for the YouTube frame bridge · native playback continues':!this.visible?'Ready · open a film in the large viewing frame':document.hidden?'Ready · page is in the background':this.video?.paused?'Ready · film is paused':this.video?.ended?'Ready · film has ended':this.hasResult?'Dreaming · same resident studio models':'Ready · waiting for the film’s first neural image');}
  async enable(){
   if(this.enabled)return;if(this.supportError){this.activityStatus();return;}this.failure=null;this.enabled=true;
   if(this.renderer){
@@ -89,15 +89,17 @@ export class DreamFeature {
  // Destruction is reserved for page teardown, a device change, or a fatal error.
  release(){this.revision++;this.enabled=false;this.loading=null;this.active=false;this.pending=false;this.hasFrame=false;this.hasResult=false;this.lastTime=undefined;this.renderer?.dispose();this.renderer=null;this.canvas?.remove();this.canvas=null;this.panel.dataset.state='off';this.button.classList.remove('is-on');this.$('[data-action=enable]').textContent='Enable dream mode';this.$('[data-setting=backend]').disabled=false;this.$('[data-role=latency]').textContent='—';this.status('Off · GPU resources released');}
  setView({visible,video,clip}){
-  if(video!==this.video||clip?.id!==this.clipId){for(const event of ['seeking','seeked'])this.video?.removeEventListener?.(event,this.onSeek);this.video=video;this.clipId=clip?.id;this.onSeek=()=>{this.renderer?.reset();this.hasResult=false;this.lastTime=undefined;this.syncActivity()};for(const event of ['seeking','seeked'])video?.addEventListener?.(event,this.onSeek);this.renderer?.reset();this.lastVersion=undefined;this.lastTime=undefined;this.hasFrame=false;this.hasResult=false;}
-  this.visible=Boolean(visible&&video&&!video.nativeOnly);this.syncActivity();
+  if(video!==this.video||clip?.id!==this.clipId){this.pending=false;this.captureTicket=null;for(const event of ['seeking','seeked'])this.video?.removeEventListener?.(event,this.onSeek);this.video=video;this.clipId=clip?.id;this.onSeek=()=>{this.pending=false;this.captureTicket=null;this.lastVersion=undefined;this.renderer?.reset();this.hasResult=false;this.lastTime=undefined;this.syncActivity()};for(const event of ['seeking','seeked'])video?.addEventListener?.(event,this.onSeek);this.renderer?.reset();this.lastVersion=undefined;this.lastTime=undefined;this.hasFrame=false;this.hasResult=false;}
+  this.waitingForFrames=Boolean(visible&&video?.nativeOnly);this.visible=Boolean(visible&&video&&!video.nativeOnly);this.syncActivity();
  }
  syncActivity(){const active=this.enabled&&this.visible&&!!this.settings.Running&&!document.hidden&&!this.video?.paused&&!this.video?.ended;this.active=active;this.renderer?.setRunning(active);if(this.canvas)this.canvas.hidden=!this.visible||!this.hasResult||!this.enabled||document.hidden;this.activityStatus();}
  submit(source,{clipId,version,time=0}={}){
   if(!this.active||!this.renderer?.ready||this.pending||version===this.lastVersion||clipId!==this.clipId)return;
   this.lastVersion=version;this.pending=true;if(this.lastTime!==undefined&&time<this.lastTime)this.renderer.reset();this.lastTime=time;
-  const revision=this.revision,video=this.video,epoch=this.renderer.epoch;
-  createImageBitmap(source).then(frame=>{if(revision!==this.revision||video!==this.video||epoch!==this.renderer?.epoch||!this.active){frame.close();if(revision===this.revision)this.pending=false;return;}return this.renderer.submit(frame,{time},()=>{if(revision===this.revision)this.pending=false;});}).catch(e=>{if(revision===this.revision){this.pending=false;this.fail('Frame access unavailable: '+e.message)}});
+  const ticket=this.captureTicket={revision:this.revision,video:this.video,epoch:this.renderer.epoch};
+  const current=()=>this.captureTicket===ticket&&ticket.revision===this.revision&&ticket.video===this.video&&ticket.epoch===this.renderer?.epoch;
+  const finish=()=>{if(this.captureTicket===ticket){this.captureTicket=null;this.pending=false;}};
+  createImageBitmap(source).then(frame=>{if(!current()||!this.active){frame.close();finish();return;}return this.renderer.submit(frame,{time},finish);}).catch(e=>{const relevant=current();finish();if(relevant)this.fail('Frame access unavailable: '+e.message);});
  }
  dispose(){this.captionFeed?.dispose();this.release();clearInterval(this.metricTimer);clearTimeout(this.editTimer);for(const event of ['seeking','seeked'])this.video?.removeEventListener?.(event,this.onSeek);document.removeEventListener('visibilitychange',this.visibility);removeEventListener('pagehide',this.pagehide);this.panel.remove();this.button.remove();this.style.remove();}
 }

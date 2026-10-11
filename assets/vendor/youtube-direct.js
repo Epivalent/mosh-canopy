@@ -18,7 +18,12 @@ window.YouTubeDirect=class YouTubeDirect{
  }
  // An unanswered extension handshake is a transport failure, not an unavailable
  // film. Keep that document listening so enabling the bridge can recover it.
- bridgeFailure(s,error){if(s.disposed||s.bridgeError===error)return;s.bridgeError=error;s.clip.bridgeError=error;s.clip.loading=false;this.onError?.(s.clip,error);}
+ bridgeFailure(s,error){if(s.disposed||s.bridgeError===error)return;s.bridgeError=error;s.clip.bridgeError=error;
+  // Reloading an extension invalidates scripts in existing embed documents.
+  // Replacing that document once allows the installed bridge to inject anew.
+  // If the fresh document also fails, retain native playback and report it.
+  if(/extension context invalidated/i.test(error)&&!s.recoveredExtensionContext){s.recoveredExtensionContext=true;s.restart();return;}
+  s.clip.loading=false;this.onError?.(s.clip,error);}
  get bridgeUnavailable(){const sessions=[...this.sessions.values()].filter(s=>!s.disposed&&!s.captionsOnly);return sessions.length>0&&sessions.every(s=>!s.connected&&!s.nativeReady&&s.bridgeError);}
  get bridgeError(){return this.bridgeUnavailable?[...this.sessions.values()].find(s=>s.bridgeError)?.bridgeError:null;}
  get startupPending(){return [...this.sessions.values()].some(s=>!s.disposed&&!s.connected&&!s.nativeReady&&!s.bridgeError&&!s.captionsOnly);}
@@ -102,9 +107,9 @@ window.YouTubeDirect=class YouTubeDirect{
    // document. Resume the last received media locus, never a phantom clock.
    const target=s.seeking?s.seekTarget:s.time;
    command('dispose');if(s.fade){s.fade.resolve(false);s.fade=null;}
-   Object.assign(s,{token:crypto.randomUUID(),loaded:false,connected:false,initialized:false,metadata:false,decoded:false,ready:0,awaitingConsumption:false,captionLookup:null,pcmSent:undefined,lastReply:performance.now(),restartTarget:target,resumePaused:s.paused});
+   Object.assign(s,{token:crypto.randomUUID(),loaded:false,connected:false,initialized:false,metadata:false,decoded:false,nativeReady:false,nativeHasFrame:false,ready:0,capturePending:false,awaitingConsumption:false,captionLookup:null,pcmSent:undefined,lastReply:performance.now(),restartTarget:target,resumePaused:s.paused});
    clip.loading=true;clip.ready=false;s.restarts=(s.restarts||0)+1;
-   const url=new URL(frame.src);url.searchParams.set('start',String(Math.floor(target)));frame.src=url.href;canvas.setAttribute('src',frame.src);
+   const url=new URL(frame.src);url.pathname='/embed/'+clip.retro.youtubeId;url.searchParams.set('start',String(Math.floor(target)));frame.src=url.href;canvas.setAttribute('src',frame.src);
   };
   // The bridge owns one in-flight frame. Return its credit only after an atlas
   // or viewing-frame consumer uses it, so unseen frames are never copied merely
@@ -159,6 +164,10 @@ window.YouTubeDirect=class YouTubeDirect{
   if(d.event==='state'){
    const wasPaused=s.paused,wasEnded=s.ended,wasSeeking=s.seeking;
    s.time=d.time;s.at=performance.now();s.rate=d.rate||1;s.hasMediaClock=true;s.duration=d.duration||s.duration;s.paused=d.paused;s.ended=d.ended;s.ready=d.ready;
+   // The first consumer request may arrive before the decoder has a frame.
+   // Bootstrap from decoder readiness; atlas/view consumers only pull after
+   // decoded pixels exist, so waiting for those consumers here deadlocks.
+   if(!s.decoded&&s.ready>=2)c.requestFrame();
    this.syncSpeech(s);
    if(wasSeeking){if(performance.now()-s.seekSent>20000){s.seeking=false;this.onError?.(clip,'YouTube seek timed out');}}
    if(wasPaused&&!s.paused)c.dispatchEvent(new Event('playing'));if(!wasPaused&&s.paused)c.dispatchEvent(new Event('pause'));if(!wasEnded&&s.ended){clip.videoDone=true;c.dispatchEvent(new Event('ended'));}
