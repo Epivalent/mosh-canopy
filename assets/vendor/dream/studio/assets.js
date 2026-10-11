@@ -12,7 +12,7 @@ export class DreamAssets {
     if(this.writes.size){this.progress('Finishing local model cache write');await Promise.all(this.writes);}
     const started=performance.now(),cache=await this.cache(cacheName);
     let response;
-    try{response=await cache?.match(url);}catch(e){this.warnings.push(e.message);}
+    try{response=await cache?.match(url);if(!response&&cache){const legacy=url.replace('/turbo-models/','/turbo-models//');if(legacy!==url)response=await cache.match(legacy);}}catch(e){this.warnings.push(e.message);}
     const cached=!!response;
     if(!response){response=await fetch(url);if(!response.ok)throw Error(`${label}: HTTP ${response.status}`);}
     // Consume the inference branch immediately; persistence must not hold up

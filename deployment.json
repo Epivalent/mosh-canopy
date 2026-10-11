@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-10-11T14:01:54.884Z",
+  "createdAt": "2026-10-11T14:09:59.020Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
@@ -190,8 +190,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/assets.js",
-      "bytes": 2549,
-      "sha256": "2dede2454922bc32f720dfec0a4fc5761f52c4a7ac33e0e5eac7ca69105411a6"
+      "bytes": 2683,
+      "sha256": "75075d50e21b5889309c060c61dcb3de2de8dae515ffe2e6c7ee68f54a4a5f2d"
     },
     {
       "file": "assets/vendor/dream/studio/gpu-canny.js",
