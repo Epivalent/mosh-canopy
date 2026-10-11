@@ -1,12 +1,12 @@
 {
-  "createdAt": "2026-10-11T14:09:59.020Z",
+  "createdAt": "2026-10-11T15:07:04.851Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 255479,
-      "sha256": "468c33cdefb5400f616093a3c0eff40e86d497ae3ca8d9ee73077470594b0e7e"
+      "bytes": 255470,
+      "sha256": "8d7f156bac29f8dcc955e8fa855c7680995ea24bf7283899c26d90317eee03d4"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -100,13 +100,13 @@
     },
     {
       "file": "assets/vendor/dream/caption-feed.js",
-      "bytes": 3947,
-      "sha256": "979b7a3c6c52822d47ee29ff8cde13e640e8ff2fea3e693ac91d928f53d8a2ac"
+      "bytes": 4567,
+      "sha256": "557f2c0c0da0ac426091ed3bb9bd461959ef160711efc04f7accbe3df0879710"
     },
     {
       "file": "assets/vendor/dream/client.js",
-      "bytes": 8026,
-      "sha256": "b9669007f74d8f159a7214c2a46e38b78f46bc8acafdc9947ab8262128fa45c5"
+      "bytes": 8082,
+      "sha256": "f16be3d0531e880b8dfc72d9b15a45aaf9c4ed1098b97baa970364ebb9e3dcc9"
     },
     {
       "file": "assets/vendor/dream/engine-matrix.js",
@@ -125,8 +125,8 @@
     },
     {
       "file": "assets/vendor/dream/feature.js",
-      "bytes": 16104,
-      "sha256": "d76422bbbce7d54ed77ff5ba27d8e00eedb08e0cb2db09c9c610aa7de7953490"
+      "bytes": 16103,
+      "sha256": "8b481db882450264f7f06c21d411fc093ff78ada1ac012394e19a622a27e00cb"
     },
     {
       "file": "assets/vendor/dream/gpu-canny.js",
@@ -210,8 +210,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-fast.js",
-      "bytes": 8269,
-      "sha256": "f1cf857c97e7a1750230b26dcbda1584fb6b92b21f6faa63019a50dc55a6b9b5"
+      "bytes": 8287,
+      "sha256": "7987f04b58b604d12a821a8c81f178c841c26a19e6b5e5e81ce79a0bbbb4686f"
     },
     {
       "file": "assets/vendor/dream/studio/native-image-upload.js",
@@ -220,8 +220,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-live-worker.js",
-      "bytes": 7717,
-      "sha256": "c6ac09d659e8fffad225ccefd788c92bb3fa1c8b0c3f8be60a83b1d02941ee92"
+      "bytes": 7737,
+      "sha256": "b838f6044024de06ae0bde1e8655d71530f37ae76da0d85007130fb7d05cc0f9"
     },
     {
       "file": "assets/vendor/dream/studio/native-noise.js",
@@ -310,8 +310,8 @@
     },
     {
       "file": "assets/vendor/dream-film.js",
-      "bytes": 1253,
-      "sha256": "a5c6f937cb295c7b52f58b261f411bdf6c2dd331804ae1749bdb48ce6705432f"
+      "bytes": 1244,
+      "sha256": "f519bef9a17d1dab348f47618876e696831baaf0d0d2fec49f4aa49b50dfc260"
     },
     {
       "file": "assets/vendor/dream-playback.js",

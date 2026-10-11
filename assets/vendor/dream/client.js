@@ -35,7 +35,7 @@ export class DreamRenderer {
   for(const role of ['encoder','fast','prefix']){
    if(this.disposed)throw new DOMException('Disposed','AbortError');
    await new Promise((resolve,reject)=>{
-    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=live-controls1',import.meta.url),{type:'module'});this.stages[role]='Loading';
+    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=caption-feed2',import.meta.url),{type:'module'});this.stages[role]='Loading';
     const fail=message=>{this.stages[role]='Error';reject(Error(message));this.onError(message);};w.onerror=e=>fail(role+': '+e.message);
     w.onmessage=({data:d})=>{
      if(this.disposed){d.bitmap?.close();return;}
@@ -49,7 +49,7 @@ export class DreamRenderer {
      if(d.type==='image'){
       const saved=this.histories.get(d.meta.input_seq);
       if(d.epoch!==this.epoch||!saved){d.bitmap?.close();return;}
-      gpu.acceptImage(d.bitmap);d.bitmap.close();gpu.setMatchedSource(saved.image);this.displayRect=saved.rect;
+      gpu.acceptImage(d.bitmap);d.bitmap.close();gpu.setMatchedSource(saved.image);this.displayRect=saved.rect;this.appliedPrompt=d.prompt;
       const stats={at:performance.now(),ms:d.ms,changed:d.changed,sourceTime:d.meta.time,inputSequence:d.meta.input_seq,sourceAgeMs:performance.now()-d.meta.captured,passes:d.passes??Number(this.settings.Passes)};
       this.results.push(stats);this.results=this.results.slice(-300);this.onResult(stats);this.onPresentation({accepted:true,...stats});
      }
@@ -73,7 +73,7 @@ export class DreamRenderer {
    }
   }catch(e){this.inputBusy=false;this.onError(e.message);}finally{frame?.close();ack();}
  }
- reset(){this.epoch++;this.hasMatch=false;this.gpu?.resetSource();for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.results=[];this.broadcast();}
+ reset(){this.epoch++;this.appliedPrompt=undefined;this.hasMatch=false;this.gpu?.resetSource();for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.results=[];this.broadcast();}
  setRunning(value){if(this.running===!!value)return;this.running=!!value;if(this.gpu)this.gpu.lastTick=undefined;this.broadcast();}
  diagnostics(){return {ready:this.ready,backend:this.backend,epoch:this.epoch,stages:this.stages,encodeMs:this.encodeMs,cannyMs:this.cannyMs,prefixMs:this.prefixMs,inputSequence:this.seq,presentations:this.presentations,last:this.results.at(-1)};}
  dispose(){if(this.disposed)return;this.disposed=true;this.ready=false;this.running=false;this.rejectLoad?.(new DOMException('Disposed','AbortError'));for(const w of Object.values(this.workers))w.terminate();cancelAnimationFrame(this.animation);for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.gpu?.dispose();}

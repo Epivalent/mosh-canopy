@@ -1,7 +1,7 @@
 // Persistent browser workers. Each queue keeps only the latest complete packet.
 import {NativeRuntime} from './native-runtime.js?v=flow5';
 import {NativePrefix,nativeSchedule} from './native-prefix.js?v=live-controls1';
-import {NativeFast} from './native-fast.js?v=live-controls1';
+import {NativeFast} from './native-fast.js?v=caption-feed2';
 import {noiseBank} from './native-noise.js';
 import {StudioGPU} from './studio-gpu.js?v=1';
 import {NativeImageUpload} from './native-image-upload.js';
@@ -66,7 +66,7 @@ async function fastLoop(){
    // Always finish the dispatched GPU work, even when its epoch was cancelled.
    // ORT run resolves after enqueueing, not after hardware completion.
    const {bitmap,changed}=await engine.presenter.present();if(ticket.epoch!==epoch){bitmap.close();continue;}
-   postMessage({type:'image',role,bitmap,meta:ticket.meta,epoch:ticket.epoch,passes:ticket.passes,ms:performance.now()-ticket.started,changed},[bitmap]);
+   postMessage({type:'image',role,bitmap,meta:ticket.meta,epoch:ticket.epoch,passes:ticket.passes,prompt:ticket.prompt,ms:performance.now()-ticket.started,changed},[bitmap]);
   }catch(e){send('error',{error:e.stack||String(e)});active=false;}
  }
 }

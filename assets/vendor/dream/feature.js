@@ -1,6 +1,6 @@
-import {DreamRenderer} from './client.js?v=live-controls1';
+import {DreamRenderer} from './client.js?v=caption-feed2';
 import {groups} from './studio/native-control-schema.js';
-import {DreamCaptionFeed} from './caption-feed.js?v=1';
+import {DreamCaptionFeed} from './caption-feed.js?v=2';
 
 // Mosh Canopy owns film selection, transport and audio. These are the standalone
 // studio's control names, values, ranges and modes, with no legacy LCM mapping.

@@ -110,7 +110,7 @@ export class NativeFast {
   this.stateIndex=nextIndex;this.hasState=true;
   await this.decoder.run({input:target.clean},{output:this.decoded});
   // The display owns presentation/readback; this is a completed-cycle ticket.
-  return {tensor:this.decoded,meta,epoch,passes:cfg.passes,started:now};
+  return {tensor:this.decoded,meta,epoch,passes:cfg.passes,prompt:cfg.prompt,started:now};
  }
  async dispose(){this.presenter?.device.destroy();await this.r.dispose();}
 }

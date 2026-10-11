@@ -8,7 +8,7 @@ window.DreamFilmAdapter=class {
     if(this.feature){this.feature.show(true);return;}
     if(this.loading)return;
     this.loading=true;this.button.disabled=true;
-    try{const {DreamFeature}=await import('./dream/feature.js?v=studio-live-controls10');this.feature=new DreamFeature({mount:this.mount,controls:this.controls,getCaption:this.getCaption});this.button.remove();if(this.view)this.feature.setView(this.view);this.feature.show(true);}
+    try{const {DreamFeature}=await import('./dream/feature.js?v=caption-feed2');this.feature=new DreamFeature({mount:this.mount,controls:this.controls,getCaption:this.getCaption});this.button.remove();if(this.view)this.feature.setView(this.view);this.feature.show(true);}
     catch(e){this.button.disabled=false;this.button.title=e.message;this.button.textContent='Retry Dream';}
     finally{this.loading=false;}
   }

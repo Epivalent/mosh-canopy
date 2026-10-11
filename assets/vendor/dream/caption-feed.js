@@ -34,19 +34,28 @@ export class DreamCaptionFeed {
   if(this.enabled)this.tick();else this.status('Stopped; current prompt retained.');
  }
  restore(){this.setEnabled(false);this.feature.change({Prompt:this.originalPrompt});this.status('Stopped; previous prompt restored.');}
+ report(){
+  if(!this.lastCaption)return;
+  const r=this.feature.renderer,text=this.lastCaption.text.trim();
+  this.status(r?.appliedPrompt===text?'Active caption guidance: '+text:
+   !r?.ready?'Caption queued while Dream loads: '+text:'Preparing caption guidance: '+text+(r.appliedPrompt?' · Currently rendering: '+r.appliedPrompt:''));
+ }
  tick(force=false,now=performance.now()){
   if(!force&&!this.enabled)return;
   const f=this.feature;
-  if(!f.enabled||!f.active||!f.renderer?.ready){this.status('Waiting for Dream and a playing film.');return;}
+  if(!f.enabled||!f.active){
+   this.status(!f.enabled?'Enable Dream to feed captions.':document.hidden?'Caption feed paused while this tab is in the background.':!f.settings.Running?'Caption feed paused with Dream.':f.video?.paused?'Caption feed paused with the film.':f.video?.ended?'Waiting for the next film.':'Waiting for a film with accessible video frames in the large view.');return;
+  }
+  this.report();
   if(!force&&now-this.lastAt<this.seconds*1000)return;
   try{
    const caption=this.getCaption(),text=caption?.text?.trim();
    if(!text){this.status('Waiting for captions for this film; prompt unchanged.');return;}
    this.lastAt=now;
-   if(text===f.renderer.modelConfig().prompt){this.status('Current caption already applied: '+text);return;}
+   if(text===(f.renderer?.modelConfig().prompt??f.settings.Prompt)){this.lastCaption=caption;this.report();return;}
    // Apply style uses this same model configuration path, not a textbox edit.
    f.change({Prompt:text});this.count++;this.lastCaption=caption;
-   this.status(`Applied ${this.count}: ${text}`);
+   this.report();
   }catch(e){this.lastAt=now;this.status('Caption feed error: '+e.message);}
  }
  diagnostics(){return {enabled:this.enabled,seconds:this.seconds,applied:this.count,lastCaption:this.lastCaption};}
