@@ -1,23 +1,23 @@
 {
-  "createdAt": "2026-10-11T20:29:54.830Z",
+  "createdAt": "2026-10-11T20:49:24.153Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/",
   "relay": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 255499,
-      "sha256": "2275b199b5b03f210e2b95d60b0e1a4efbbe82063a0d3080c565cc669ede5cee"
+      "bytes": 255620,
+      "sha256": "71f41337f144044916d52e4a8b3f37c832dbc8f8af8356ec7e87ef929bab44c6"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
-      "bytes": 4799,
-      "sha256": "b551f0b17b05bd7a9d6564ef44649a86f5ec025683aba21ffd5f3645caef5867"
+      "bytes": 4963,
+      "sha256": "d30e26407b9a21b8947534dba7c9cd3c60669449515ce86a6a0f69bf0b38e990"
     },
     {
       "file": "assets/vendor/bead-previews.js",
-      "bytes": 5584,
-      "sha256": "e6d4413375f89368c860ea7e1dd9e94b725ee487b16454c975b98932a310bcb8"
+      "bytes": 5600,
+      "sha256": "01c8e76fee9ed8fc78d71f137b5e19a09f0063b16e4ddb1d9982c24d5f5dfe84"
     },
     {
       "file": "assets/vendor/browser-segmenter-core.js",
@@ -241,8 +241,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-runtime.js",
-      "bytes": 4761,
-      "sha256": "11d458405e5bde3a9f3aedd084ff6bf6dbde0e863e8af58cde993464d2b7b647"
+      "bytes": 4815,
+      "sha256": "72fab5bd8a239c75413b4e32688a1a7e867b5e82eebfc8c1239abac2518bf371"
     },
     {
       "file": "assets/vendor/dream/studio/native-tokenizer.js",
@@ -430,6 +430,11 @@
       "sha256": "924e4fcdfdf69acccff3d024d6e1ad3f41ca858d27fc4dd59fc4927dd933e7db"
     },
     {
+      "file": "assets/vendor/published-assets.js",
+      "bytes": 666,
+      "sha256": "19d364e7bd2087af10bcf30126f72019d56c1f4c36a7c30541dae1550fc7ee98"
+    },
+    {
       "file": "assets/vendor/retrotv-caption-batch.js",
       "bytes": 2549,
       "sha256": "e069bb427a04bf66afbd54a66eedd99ab8589622b879e1d864767d982ad44048"
@@ -461,8 +466,8 @@
     },
     {
       "file": "assets/vendor/semantic-search.js",
-      "bytes": 13005,
-      "sha256": "2b84b2ca27aa381a69634395a104da20ffbd8425f836af84a1b2b6b5c770a1a6"
+      "bytes": 13053,
+      "sha256": "1df264fba93f365fb378e0c133acf4c4d11340c2eda90dbe389821b2097d89e9"
     },
     {
       "file": "assets/vendor/source-cutout-worker.js",
@@ -606,8 +611,8 @@
     },
     {
       "file": "assets/semantic/search-worker.mjs",
-      "bytes": 26456,
-      "sha256": "f094d92ba1add7dde54b74ae7a01515b7158db9dd4b97978ec6e93b139272ad6"
+      "bytes": 26472,
+      "sha256": "451a21336c3a74f2ddd04a00483ecca6b275247ee1265788f0467a5d1dafa1aa"
     },
     {
       "file": "assets/semantic/catalogue-filters.mjs",
@@ -642,6 +647,7 @@
   ],
   "rewrites": [
     "mosh-canopy.html",
+    "assets/vendor/bead-preview-worker.js",
     "assets/vendor/bead-previews.js",
     "assets/vendor/browser-segmenter-core.js",
     "assets/vendor/browser-segmenter-worker.js",

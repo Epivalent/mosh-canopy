@@ -1,4 +1,5 @@
 // Native WebP decoder in a worker; one packed image per visible/prepared film.
+importScripts('https://epivalent.github.io/mosh-canopy/assets/vendor/published-assets.js?v=1');
 const jobs=new Map();
 const sampling=new Map();
 onmessage=({data:d})=>{
@@ -15,7 +16,7 @@ async function sample(s){
   const signal=s.controller.signal;
   let meta;
   try{const r=await fetch(s.url,{signal,cache:'no-cache'});if(r.ok)meta=await r.json();}catch(e){signal.throwIfAborted();}
-  let preview=meta?.status==='ready'&&meta.preview?.url,url=preview||s.poster;
+  let preview=meta?.status==='ready'&&meta.preview?.url,url=preview?PublishedAssets.url(preview,s.url):s.poster;
   const open=async()=>{
    const image=await fetch(url,{signal,cache:'force-cache'});if(!image.ok)throw Error('Extraction image HTTP '+image.status);
    decoder=new ImageDecoder({type:preview?'image/webp':'image/jpeg',data:await image.arrayBuffer(),preferAnimation:true});
@@ -52,7 +53,7 @@ async function load(s){
   const meta=await r.json();if(s.closed)return;
   postMessage({type:'metadata',id:s.id,token:s.token,status:meta.status,title:meta.title,duration:meta.duration});
   if(meta.status!=='ready'||!meta.preview?.url)return;
-  const image=await fetch(meta.preview.url,{signal:s.controller.signal,cache:'force-cache'});if(!image.ok)throw Error('Preview image HTTP '+image.status);
+  const image=await fetch(PublishedAssets.url(meta.preview.url,r.url||s.url),{signal:s.controller.signal,cache:'force-cache'});if(!image.ok)throw Error('Preview image HTTP '+image.status);
   const data=await image.arrayBuffer();if(s.closed)return;
   decoder=new ImageDecoder({type:'image/webp',data,preferAnimation:true});await decoder.tracks.ready;await decoder.completed;if(s.closed)return;
   const frames=decoder.tracks.selectedTrack.frameCount;if(frames<2)throw Error('Preview has no animation');

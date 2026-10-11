@@ -68,7 +68,7 @@ function topK(scores,k){
   else if(value>values[0]){let i=0;while(i*2+1<n){let c=i*2+1;if(c+1<n&&values[c+1]<values[c])c++;if(values[c]>=value)break;rows[i]=rows[c];values[i]=values[c];i=c}rows[i]=row;values[i]=value}
  }return Array.from(rows.subarray(0,n));
 }
-async function byteRanges(url,ranges){url=new URL(new URL(url,'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/').pathname,'https://mosh-canopy-assets.moshcanopy.workers.dev/').href;
+async function byteRanges(url,ranges){url=new URL(new URL(url,'https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/semantic/').pathname,'https://mosh-canopy-assets.moshcanopy.workers.dev/').href;
  const r=await checked(url,{headers:{Range:'bytes='+ranges.map(([start,end])=>`${start}-${end}`).join(',')}});
  if(r.status!==206){await r.body?.cancel();throw Error('Static host must support byte-range requests for search results')}
  const bytes=new Uint8Array(await r.arrayBuffer()),pieces=new Map(),expected=new Map(ranges);

@@ -5,7 +5,7 @@ import {DreamAssets} from './assets.js?v=direct-assets1';
 export class NativeRuntime {
   constructor(progress=()=>{}) { this.progress=progress; this.sessions=new Map(); this.tensors=new Set(); }
   async load(provider='npu') {
-    this.provider=provider; this.assets=new DreamAssets(this.progress,{legacyOrigins:["https://mosh-canopy-assets.moshcanopy.workers.dev"]});
+    this.provider=provider; this.assets=new DreamAssets(this.progress,{legacyOrigins:["https://mosh-canopy-assets.moshcanopy.workers.dev","https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev"]});
     this.base=new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/vendor/dream/studio/turbo-models/',import.meta.url).href;
     this.metadataBase=new URL('./model-metadata/562fb01da7bfa263cbe78acf4e7e01dde20c1fcca3ed77667bb2ac8374406b30/',import.meta.url).href;
     this.manifest=await this.assets.json(this.metadataBase+'manifest.json','Dream model manifest');

@@ -28,3 +28,7 @@ jobs:
         env:
           SITE_URL: ${{ steps.deployment.outputs.page_url }}
         run: node .github/scripts/check-dream.mjs "$SITE_URL"
+      - name: Verify preview metadata references and browser access
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node .github/scripts/check-previews.mjs "$SITE_URL"

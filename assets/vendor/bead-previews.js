@@ -4,7 +4,7 @@ window.BeadPreviews=class BeadPreviews {
  constructor({archive,width,height,maxTextureSize}){
   Object.assign(this,{archive,width,height,maxTextureSize,entries:new Map(),prepared:new Set(),visible:new Set(),serial:0});
   this.samples=new Map();
-  this.worker=new Worker('https://epivalent.github.io/mosh-canopy/assets/vendor/bead-preview-worker.js?v=3');
+  this.worker=new Worker('https://epivalent.github.io/mosh-canopy/assets/vendor/bead-preview-worker.js?v=published-assets1');
   this.worker.onmessage=({data:d})=>{
    if(d.type==='samples'){
     const request=this.samples.get(d.token);
