@@ -6,7 +6,7 @@ export class NativeRuntime {
   constructor(progress=()=>{}) { this.progress=progress; this.sessions=new Map(); this.tensors=new Set(); }
   async load(provider='npu') {
     this.provider=provider; this.assets=new DreamAssets(this.progress);
-    this.base=new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/vendor/dream/studio/turbo-models//',import.meta.url).href;
+    this.base=new URL('https://mosh-canopy-assets.moshcanopy.workers.dev/assets/vendor/dream/studio/turbo-models/',import.meta.url).href;
     this.manifest=await(await fetch(this.base+'manifest.json',{cache:'no-store'})).json();
     ort.env.wasm.numThreads=1;
     ort.env.wasm.wasmPaths=new URL('./ort/',import.meta.url).href;

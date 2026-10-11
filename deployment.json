@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-10-11T10:20:40.258Z",
+  "createdAt": "2026-10-11T14:01:54.884Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
@@ -110,13 +110,13 @@
     },
     {
       "file": "assets/vendor/dream/engine-matrix.js",
-      "bytes": 16684,
-      "sha256": "cc7b950abab9aeea67c5e8a9768df88cd5ed6956f19bfc3a41506c360a3f61a1"
+      "bytes": 16683,
+      "sha256": "82f4a7286d9cd81a9dea6229f1f20f892fe8e55895b50dbdeb3c20897667013b"
     },
     {
       "file": "assets/vendor/dream/engine.js",
-      "bytes": 16679,
-      "sha256": "8cb18984f1091122c4357894001d69d9a613aa83a2ceea08b71c53d55b933733"
+      "bytes": 16678,
+      "sha256": "faf9324bb66d0b972944bc4ee2402ccd3c04c07ae72f6083da8ba44f0ff6ee9b"
     },
     {
       "file": "assets/vendor/dream/feature.css",
@@ -240,8 +240,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-runtime.js",
-      "bytes": 4526,
-      "sha256": "7db1837a96fedaceae4205ada5a4b66c8cf696cab5ec07bc064eec0829dd136d"
+      "bytes": 4525,
+      "sha256": "85d7f1a63b7a50361ba3f3f33564c55b8867c3534167eea8a328c00ef201db96"
     },
     {
       "file": "assets/vendor/dream/studio/native-tokenizer.js",
@@ -300,8 +300,8 @@
     },
     {
       "file": "assets/vendor/dream/webnn-spatial-engine.js",
-      "bytes": 3059,
-      "sha256": "777af13dab959a892718286b5a5d96872772bdfb96180f4dc15d7227cd3ec682"
+      "bytes": 3058,
+      "sha256": "bd2393512d00b6564647001eb04f76da8790c45865175961f6b54bcb13b795c2"
     },
     {
       "file": "assets/vendor/dream/worker.js",
