@@ -28,7 +28,7 @@ export class WordMontage {
   $('montageScope').onchange=()=>this.filters.sync();
   addEventListener('mosh-catalogue-selection',()=>{if(!this.panel.hidden)this.filters.sync();});
   $('bMontage').onclick=()=>this.open();$('concordanceMontage').onclick=()=>{if($('concordanceWord').value.trim())$('montageText').value=$('concordanceWord').value;this.open();};
-  $('montageClose').onclick=()=>{this.panel.hidden=true;};$('montageBuild').onclick=()=>this.build();$('montageShuffle').onclick=()=>{this.seed++;this.build();};
+  $('montageClose').onclick=()=>{this.panel.hidden=true;};$('montageBuild').onclick=()=>this.build();$('montageShuffle').onclick=()=>{this.seed++;this.build({recast:true});};
   $('montagePlay').onclick=()=>this.play().catch(e=>this.fail(e));$('montageStop').onclick=()=>this.cancel(true);
   this.recordingTray=document.createElement('div');this.recordingTray.id='montageRecording';this.recordingTray.hidden=true;
   Object.assign(this.recordingTray.style,{position:'fixed',right:'14px',bottom:'64px',zIndex:'6',background:'var(--panel)',padding:'10px 14px',font:'12px/1.45 var(--type)',maxWidth:'calc(100vw - 56px)'});
@@ -48,12 +48,12 @@ export class WordMontage {
  });}
  stopWorkers(){this.captureController?.abort();this.captureController=null;for(const t of [...this.tasks])t.reject(new DOMException('Cancelled','AbortError'));for(const w of this.workers){w.terminate();if(w===this.planner)this.planner=null;}this.workers.clear();}
  release(){for(const p of this.prepared)for(const f of p?.frames||[])f.bitmap.close();this.prepared=[];this.buffers=null;this.clips=[];this.cut=null;this.clip=null;this.lastFrame=null;}
- async build(){
+ async build({recast=false}={}){
   this.cancel(true);this.release();this.ready=false;const revision=++this.revision;this.busy=true;$('montagePlay').disabled=true;$('montageCast').replaceChildren();
   const report=text=>{if(revision===this.revision)$('montageStatus').textContent=text;};
   try{
-   const planner=this.planner??=this.worker('./planner-worker.js?v=neon1');this.workers.add(planner);
-   const plan=await this.request(planner,{id:revision,text:$('montageText').value,seed:this.seed,maxGap:Math.max(0,+$('montageGap').value),selection:$('montageScope').checked?this.hooks.selection():null},report);
+   const planner=this.planner??=this.worker('./planner-worker.js?v=casting2');this.workers.add(planner);
+   const plan=await this.request(planner,{id:revision,text:$('montageText').value,seed:this.seed,previousFilms:recast?(this.plan?.clips||[]).filter(c=>!c.missing).map(c=>c.filmId):[],maxGap:Math.max(0,+$('montageGap').value),selection:$('montageScope').checked?this.hooks.selection():null},report);
    this.workers.delete(planner);if(revision!==this.revision)return;this.plan=plan;this.renderCast();
    if(plan.missing.length){report('No exact speech found for: '+plan.missing.join(', ')+'. Edit the text or filters.');return;}
    this.clips=plan.clips.map(c=>this.hooks.resolve(c));this.cues=plan.clips.map(c=>[{start:c.start,end:c.end,lines:[c.words]}]);

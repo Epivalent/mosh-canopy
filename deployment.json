@@ -1,12 +1,12 @@
 {
-  "createdAt": "2026-10-11T15:35:30.474Z",
+  "createdAt": "2026-10-11T16:19:00.685Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 255488,
-      "sha256": "81727f34a054b021c94c809b742f8d129df281166373cf0e0eb10b6306fecd89"
+      "bytes": 255489,
+      "sha256": "7155f020f342bdc6cc09594a0fa3302e4c682695952f7dcd5a7bcebf79e3878c"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -375,8 +375,8 @@
     },
     {
       "file": "assets/vendor/montage/montage.mjs",
-      "bytes": 19079,
-      "sha256": "4ee81f0ae45d4299fe8c119a83bef4e495ecf60e401edd5f6ce447ddf1bebd62"
+      "bytes": 19198,
+      "sha256": "13c3d43bb3bab4d53bdd75e660cc48f61df4678efd36874c99c023a99551df34"
     },
     {
       "file": "assets/vendor/montage/ordinal-postings.mjs",
@@ -385,13 +385,13 @@
     },
     {
       "file": "assets/vendor/montage/plan-core.mjs",
-      "bytes": 2075,
-      "sha256": "59da0216a2bd569a4ff330e7a77cd08a28f04a28577a595c3da58aaae84ce7f3"
+      "bytes": 3997,
+      "sha256": "ba7d7f9966de88db9926de7786290646d7eda81bc36ed8b98babd08a18940e08"
     },
     {
       "file": "assets/vendor/montage/planner-worker.js",
-      "bytes": 7895,
-      "sha256": "8284b2e75702427919f1e4d37e80dffbf0e5c9a2d9e57d5884f3f6f5836a28d6"
+      "bytes": 8834,
+      "sha256": "4b25a847eeebada8e7262afc2e9d446f63948b25f13549f17d35fdef7bfde8b7"
     },
     {
       "file": "assets/vendor/montage/recording.mjs",

@@ -3083,7 +3083,7 @@ const CaptionBatch=new RetroCaptionBatch({index:RetroCaptionCache,voices:WordTra
 
 // The montage owns decoded buffers, not another pool of HTML video players.
 // Its handoff is independent of normal full-film probing and extraction.
-import('https://epivalent.github.io/mosh-canopy/assets/vendor/montage/montage.mjs?v=record1').then(({WordMontage})=>{
+import('https://epivalent.github.io/mosh-canopy/assets/vendor/montage/montage.mjs?v=casting2').then(({WordMontage})=>{
  Montage=window.Montage=new WordMontage({width:DW,notify:toast,selection:()=>Retro.selection(),
   closeSearch:()=>{Concordance.semantic.hide();Concordance.close();},closeMix:()=>{$('mixPanel').hidden=true;$('bMix').setAttribute('aria-expanded','false');},
   resolve:cut=>{let clip=Archive.clips.find(c=>WordTrails.key(c)===cut.filmId);
