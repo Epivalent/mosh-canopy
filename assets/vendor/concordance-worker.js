@@ -1,4 +1,4 @@
-importScripts(...['https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-selection.js?v=neon1','https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-metadata.js?v=neon1','https://epivalent.github.io/mosh-canopy/assets/vendor/concordance-index.js?v=12','https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-store.js?v=4','https://epivalent.github.io/mosh-canopy/assets/vendor/live-transcripts.js','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-published.js?v=7','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-caption-index.js?v=10'].map(path=>new URL(path,self.location.origin).href));
+importScripts(...['https://epivalent.github.io/mosh-canopy/assets/vendor/go-search-core.js?v=1','https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-selection.js?v=neon1','https://epivalent.github.io/mosh-canopy/assets/vendor/catalogue-metadata.js?v=neon1','https://epivalent.github.io/mosh-canopy/assets/vendor/concordance-index.js?v=12','https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-store.js?v=4','https://epivalent.github.io/mosh-canopy/assets/vendor/live-transcripts.js','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-published.js?v=7','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-caption-index.js?v=10'].map(path=>new URL(path,self.location.origin).href));
 const metadataCatalogue=new CatalogueMetadata(),retroIndex=new RetroCaptionIndex(),miaIndex=new RetroPublishedCaptions('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/search/');
 // Static corpora already have term postings. Only genuinely new live speech
 // needs client-side indexing. Full transcripts are loaded for matching sheets.
@@ -41,13 +41,30 @@ async function preparePages(indices,generation,priority='high'){
  for(const id of loadedBatch.keys())if(!keep.has(id)){loadedBatch.delete(id);concordance.films.delete(id);}
  return packed;
 }
+async function goTitle(query,extra=[],limit=1){
+ const sources=await Promise.allSettled([metadataCatalogue.mia().then(m=>[...m.values()]),metadataCatalogue.neon().then(n=>n.films),retroIndex.documents()]);
+ const rows=[...extra,...sources.flatMap(s=>s.status==='fulfilled'?s.value:[])];
+ return {results:GoSearchCore.topTitles(query,rows,limit)};
+}
+async function goWord(query,limit=1){
+ const tokens=concordance.tokens(query),phrases=[query,...[...new Set(tokens)].sort((a,b)=>b.length-a.length)];
+ for(const word of new Set(phrases)){
+  const responses=await Promise.allSettled([miaIndex.query(word),retroIndex.query(word),concordance.query(word)]);
+  const hits=new Map();for(const r of responses)if(r.status==='fulfilled')for(const hit of r.value.results)hits.set(hit.id,hit);
+  if(hits.size)return {results:[...hits.values()].sort((a,b)=>b.matches-a.matches||a.title.localeCompare(b.title)).slice(0,limit)};
+ }
+ return {results:[]};
+}
 onmessage=({data})=>{
  if(data.type==='refresh-published'){coverageCache=null;Promise.all([miaIndex.load(),retroIndex.published.load()]).catch(error=>console.warn('Concordance publication refresh:',error));return;}
  if(data.type==='cancel-stack'){stackGeneration++;return;}
  if(data.type==='ingest-live'){liveIngest=liveIngest.then(async()=>{await ready;await ingestLive(data);}).catch(error=>postMessage({type:'error',message:String(error)}));return;}
  const pendingLive=liveIngest,generation=['concordance','passage-stack'].includes(data.type)?++stackGeneration:stackGeneration;
- (async()=>{await ready;let result;
-  if(data.type==='passage-stack'){
+ (async()=>{
+  if(data.type==='go-title'){const result=await goTitle(data.query,data.films,data.limit);postMessage({type:data.type,requestId:data.requestId,result});return;}
+  await ready;let result;
+  if(data.type==='go-word')result=await goWord(data.query,data.limit);
+  else if(data.type==='passage-stack'){
    if(generation!==stackGeneration)throw Error('Search superseded');
    const seen=new Set();const results=(data.passages||[]).filter(p=>p.id&&Number.isFinite(p.start)&&!seen.has(p.id)&&seen.add(p.id)).map(p=>({id:p.id,title:p.title,start:p.start,index:0,atTime:true,matches:0,source:p.id.startsWith('yt:')?'retro':'mia'}));
    result={term:'',results,occurrences:0,stackId:generation};currentStack={generation,results,term:''};

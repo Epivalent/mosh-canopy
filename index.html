@@ -50,22 +50,22 @@ body{height:100%;margin:0;background:var(--void);color:var(--text);font:15px/1.4
 #mixPanel[hidden]{display:none}
 #mixPanel h2{font:400 22px/1 var(--disp);margin:0 0 10px}
 #mixPanel .row{margin:7px 0}
-:is(#concordancePanel,#semanticPanel){position:fixed;top:12px;right:14px;width:min(350px,calc(100vw - 28px));box-sizing:border-box;background:var(--panel);border-left:4px solid var(--pink);padding:14px;box-shadow:0 8px 28px #0008;font:12px/1.45 var(--type)}
+:is(#concordancePanel,#semanticPanel,#goPanel){position:fixed;top:12px;right:14px;width:min(350px,calc(100vw - 28px));box-sizing:border-box;background:var(--panel);border-left:4px solid var(--pink);padding:14px;box-shadow:0 8px 28px #0008;font:12px/1.45 var(--type)}
 #clipCaptions{position:fixed;transform:translate(-50%,-100%);text-align:center;pointer-events:none;font:500 22px/1.4 Arial,sans-serif;color:white;text-shadow:0 1px 3px #000;z-index:2}
 #clipCaptions[hidden]{display:none}
 #clipCaptions .caption-line{display:block;width:fit-content;max-width:100%;margin:auto;padding:1px 7px;background:rgba(0,0,0,.78);border-radius:2px}
 #clipCaptions .caption-context{color:#d0d0d0}
 #clipCaptions button{font:inherit;color:inherit;text-shadow:inherit;display:inline;background:none;border:0;padding:0;cursor:pointer;pointer-events:auto}
 #clipCaptions button:hover,#clipCaptions button:focus-visible{color:#ffe99a;text-decoration:underline}
-:is(#concordancePanel,#semanticPanel){z-index:21} /* Search must stay above the film controls (20). */
-:is(#concordancePanel,#semanticPanel){max-height:calc(100vh - 24px);overflow:auto} #semanticResults .semanticHit{border-top:1px solid #7776;padding:12px 0} .semanticTitle{font:600 14px var(--type);background:none;border:0;padding:0;text-align:left;text-decoration:underline;cursor:pointer;color:inherit} #semanticResults p{white-space:normal}
-:is(#concordancePanel,#semanticPanel)[hidden]{display:none}
-:is(#concordancePanel,#semanticPanel) h2{font:24px var(--disp);margin:0 0 8px}
-:is(#concordancePanel,#semanticPanel) form{display:flex;gap:6px;margin-bottom:8px}
-:is(#concordancePanel,#semanticPanel) input[type=search]{min-width:0;flex:1}
-:is(#concordancePanel,#semanticPanel) select{max-width:100%;margin:6px 0}
-:is(#concordancePanel,#semanticPanel) input[type=range]{width:100%}
-:is(#concordancePanel,#semanticPanel) .buttons{display:flex;gap:7px;margin:8px 0}
+:is(#concordancePanel,#semanticPanel,#goPanel){z-index:21} /* Search must stay above the film controls (20). */
+:is(#concordancePanel,#semanticPanel,#goPanel){max-height:calc(100vh - 24px);overflow:auto} #semanticResults .semanticHit{border-top:1px solid #7776;padding:12px 0} .semanticTitle{font:600 14px var(--type);background:none;border:0;padding:0;text-align:left;text-decoration:underline;cursor:pointer;color:inherit} #semanticResults p{white-space:normal}
+:is(#concordancePanel,#semanticPanel,#goPanel)[hidden]{display:none}
+:is(#concordancePanel,#semanticPanel,#goPanel) h2{font:24px var(--disp);margin:0 0 8px}
+:is(#concordancePanel,#semanticPanel,#goPanel) form{display:flex;gap:6px;margin-bottom:8px}
+:is(#concordancePanel,#semanticPanel,#goPanel) input[type=search]{min-width:0;flex:1}
+:is(#concordancePanel,#semanticPanel,#goPanel) select{max-width:100%;margin:6px 0}
+:is(#concordancePanel,#semanticPanel,#goPanel) input[type=range]{width:100%}
+:is(#concordancePanel,#semanticPanel,#goPanel) .buttons{display:flex;gap:7px;margin:8px 0}
 #semanticPanel{width:min(38rem,calc(100vw - 28px))}
 #semanticResults .semanticHit{display:grid;grid-template-columns:minmax(0,30%) minmax(0,1fr);gap:12px;padding:10px 0}
 .semanticPreview{align-self:start;position:relative;aspect-ratio:16/9;width:100%;border:0;padding:0;background:#252a2b;color:#ddd;cursor:pointer;overflow:hidden;border-radius:2px}
@@ -134,7 +134,7 @@ details summary{cursor:pointer;margin:8px 0}
   <p id="seginfo"></p>
   <canvas id="rosette" width="168" height="168" aria-hidden="true"></canvas>
 </section>
-<p id="hint">Drag to orbit. Scroll or pinch to zoom. Collage visits the latest composition between the beads. Space pauses, F follows the show.</p>
+<p id="hint">Drag to orbit. Scroll or pinch to zoom. Collage visits the latest composition between the beads. Space pauses, F follows the show, G goes to a film.</p>
 <nav id="dock" aria-label="Controls">
   <button class="tape" id="bSettings" aria-expanded="false" aria-controls="drawer">Archive</button>
   <button class="tape" id="bPause" aria-pressed="false">Pause</button>
@@ -146,11 +146,22 @@ details summary{cursor:pointer;margin:8px 0}
   <button class="tape" id="bWords" aria-expanded="false" aria-controls="concordancePanel">Words</button>
   <button class="tape" id="bThemes" aria-expanded="false" aria-controls="semanticPanel">Themes</button>
   <button class="tape" id="bMontage" aria-controls="montagePanel">Say it</button>
+  <button class="tape" id="bGo" aria-expanded="false" aria-controls="goPanel" aria-keyshortcuts="g" title="Go to a film (G)">Go</button>
   <button class="tape" id="bSkip">Skip</button>
   <button class="tape" id="bHelp" aria-haspopup="dialog" aria-controls="welcomeDialog">Guide</button>
   <button class="tape" id="bSave" hidden>Save canopy</button>
 </nav>
 <div id="clipCaptions" hidden aria-label="Film subtitles"><div></div></div>
+<section id="goPanel" hidden aria-label="Go to a film">
+  <h2>Go</h2>
+  <form id="goForm"><input id="goQuery" type="search" placeholder="Title, idea, words, or YouTube link…" aria-label="Film destination" required><button class="tape" type="submit">Go</button></form>
+  <label>Destination <select id="goChoice"><option value="best">Best match</option><option value="random">Random from top matches</option></select></label>
+  <label>Top <input id="goCount" type="number" min="1" step="1" value="10" form="goForm" style="width:5em" disabled> results</label>
+  <p class="note">Random chooses from up to this many matching films. A URL or video ID always opens that exact film.</p>
+  <p class="note">Search all archives by title, then theme, then spoken words. Any YouTube URL or video ID works; <b>yt: your query</b> searches YouTube directly.</p>
+  <p id="goStatus" role="status">Where would you like to go?</p>
+  <button class="tape" id="goClose" type="button">Close</button>
+</section>
 <section id="concordancePanel" hidden aria-label="Transcript concordance">
   <h2>Word paths</h2>
   <button class="tape" id="concordanceMontage" type="button">Make the films say something</button>
@@ -268,18 +279,18 @@ details summary{cursor:pointer;margin:8px 0}
 <div id="drop">Drop video files to add them to the archive</div>
 <div id="toast" role="status"></div>
 <div id="fatal"></div>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/welcome.js?v=2"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/welcome.js?v=go3"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/three.min.js"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/browser-segmenter.js?v=8"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/collage-layout.js?v=2"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/collage-bank.js?v=3"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/collage-composer.js?v=1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/net-collage.js?v=6"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/word-helices.js?v=recovery1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/word-helices.js?v=go1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/published-assets.js?v=1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/bead-previews.js?v=published-assets1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-text-pages.js?v=2"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/semantic-search.js?v=launch-recovery1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/semantic-search.js?v=go1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-concordance.js?v=meaning3"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/clip-captions.js?v=14"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/helix-transcript.js?v=neon1"></script>
@@ -296,6 +307,8 @@ details summary{cursor:pointer;margin:8px 0}
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/youtube-native.js?v=8"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/youtube-direct.js?v=direct-assets1-24"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv.js?v=neon1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/go-search-core.js?v=1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/go-navigation.js?v=1"></script>
 <script>
 'use strict';
 const MIA_ON = true;
@@ -3077,6 +3090,15 @@ addEventListener('mosh-catalogue-selection',()=>{
   Show.preparationAbort?.abort();Show.preparationAbort=null;Show.selectionToken++;Show.selecting=false;
   if(Show.nextVideo)Archive.releaseProbe(Show.nextVideoClip,Show.nextVideo);
   Show.nextVideo=null;Show.nextVideoClip=null;Show.next=null;Show.nextClip=null;Show.nextCell=null;Show.focusedNext=false;
+});
+const Go = new GoNavigation({voices:WordTrails,semantic:Concordance.semantic,
+  localTitles:()=>Archive.clips.map(c=>({id:WordTrails.key(c),title:c.name})),
+  leaveSearch:()=>{Concordance.semantic.hide();Concordance.close();},
+  navigate:async(hit,current)=>{let clip=Archive.clips.find(c=>WordTrails.key(c)===hit.id);
+    if(!clip&&hit.id.startsWith('yt:'))clip=await Retro.open(hit.id);
+    if(!clip){const catalog=await MIA.catalogData,s=CatalogueSelection.enrichMIA(catalog).find(s=>(s.id||s.mp4)===hit.id);if(!s)throw Error('Film metadata is unavailable');clip=Archive.addVideo(MIA.media(s),MIA.label(s),{mia:s,deferMedia:true,catalog:true});}
+    if(current())await Show.playFrom(clip,Net.locate(clip),hit.start||0,'go');
+  }
 });
 const Hover = new FilmHover({canvas:glCanvas,active:()=>!Concordance.active&&HelixReader.element.hidden,
  pick:(x,y)=>Net.pick(x,y,false)?.clip,

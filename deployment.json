@@ -1,13 +1,13 @@
 {
-  "createdAt": "2026-10-12T09:44:18.871Z",
+  "createdAt": "2026-10-12T10:21:05.572Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/",
   "relay": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 256291,
-      "sha256": "e9bd1f5a2530334961e53553d18153c04cfb6752af19bae817609110f2ea9920"
+      "bytes": 258443,
+      "sha256": "4b72dec4d4c8b5063923beef6098bff56d22f1b6f6f9039faa4ed1f8ea7804ee"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -91,8 +91,8 @@
     },
     {
       "file": "assets/vendor/concordance-worker.js",
-      "bytes": 8150,
-      "sha256": "4f7830d750ed36d9689c01060a5185257aeb86458763cfb0f02ab39037ba23e3"
+      "bytes": 9408,
+      "sha256": "802c2ebc8036661488a8386d41bc47d4b2a2efc0bcbdf36fd11ef7b365f84736"
     },
     {
       "file": "assets/vendor/dream/assets.js",
@@ -355,6 +355,16 @@
       "sha256": "00e11e6030b8ef817bae7ff3ef33afdba3f151364e5b6183900cbca4a214d38e"
     },
     {
+      "file": "assets/vendor/go-navigation.js",
+      "bytes": 5376,
+      "sha256": "5b357f0fb503dbf4d076914e38adce04b415bc744db9d24bc4bff6e981b96863"
+    },
+    {
+      "file": "assets/vendor/go-search-core.js",
+      "bytes": 3538,
+      "sha256": "9eb0b763530caf7d7387f6fef18c73d88c214920858d10094c003dfb9abf8a2c"
+    },
+    {
       "file": "assets/vendor/helix-transcript.js",
       "bytes": 6881,
       "sha256": "de58f246b9e6dc06cd2c30f5dcd879fc089001620324881bbae0afdd18854758"
@@ -481,8 +491,8 @@
     },
     {
       "file": "assets/vendor/semantic-search.js",
-      "bytes": 13073,
-      "sha256": "001442b554f8cb445ef4c42a8b9afdd9834ba01ebb97f98029bbae03970a3f14"
+      "bytes": 13059,
+      "sha256": "4a1cab88f6bb5824f969e59a199a51f75120bebbea83598b08415b9c287bfd39"
     },
     {
       "file": "assets/vendor/source-cutout-worker.js",
@@ -566,13 +576,13 @@
     },
     {
       "file": "assets/vendor/welcome.js",
-      "bytes": 9068,
-      "sha256": "a1bf44af8f47007183418a4ea0b8ade95d98d20156d6c2832bac58b8ccef89f5"
+      "bytes": 13051,
+      "sha256": "4866ff44b140399dbe10614d8e6705caed8cd5650d70e2916c65c24a55e4c1b9"
     },
     {
       "file": "assets/vendor/word-helices.js",
-      "bytes": 19730,
-      "sha256": "0b72312ec92978b54c4d62124ea385031822ebd5a23f6417e65a10288599ce8b"
+      "bytes": 19767,
+      "sha256": "f9a13c9dda7b32ab43b2cdf4046bc0d73fb0255f3004cf05afc3aec4a78d3209"
     },
     {
       "file": "assets/vendor/word-ribbon-worker.js",
@@ -626,8 +636,8 @@
     },
     {
       "file": "assets/semantic/search-worker.mjs",
-      "bytes": 26472,
-      "sha256": "451a21336c3a74f2ddd04a00483ecca6b275247ee1265788f0467a5d1dafa1aa"
+      "bytes": 27184,
+      "sha256": "b6103e9b74f59a8c3d4277476d423ceca6fe4ac00524e659a329f626d84fc4ac"
     },
     {
       "file": "assets/semantic/catalogue-filters.mjs",
@@ -675,6 +685,7 @@
     "assets/vendor/dream/studio/native-runtime.js",
     "assets/vendor/dream/webnn-spatial-engine.js",
     "assets/vendor/film-preparation-worker.js",
+    "assets/vendor/go-navigation.js",
     "assets/vendor/live-voz.js",
     "assets/vendor/montage/media-worker.mjs",
     "assets/vendor/montage/planner-worker.js",

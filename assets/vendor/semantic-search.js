@@ -22,7 +22,7 @@ globalThis.SemanticSearch=class {
  hide(){this.panel.hidden=true;document.getElementById("bThemes").setAttribute("aria-expanded","false");this.previews.suspend()}
  syncFilters(){this.catalogueFilters??=new CatalogueFilterControls(document.getElementById('semanticFilterFields'),()=>this.useSelection.checked);this.catalogueFilters.sync()}
  updateCoverage(){const m=this.info;document.getElementById('semanticCoverage').textContent=m?`Meaning index: ${m.films.toLocaleString()} films · ${m.passages.toLocaleString()} passages. Captioned coverage: ${Object.entries(m.target).map(([source,c])=>`${source} ${c.captioned.toLocaleString()} / ${c.catalogue.toLocaleString()}`).join(' · ')}. Snapshot ${new Date(m.createdAt*1000).toLocaleDateString()}; newly arriving captions remain available in Words.`:'Searches a prepared caption index. Coverage appears when loaded.'}
- ensure(){if(this.worker)return;const w=this.worker=new Worker('https://epivalent.github.io/mosh-canopy/assets/semantic/search-worker.mjs?v=published-assets1',{type:'module'});w.onmessage=({data:m})=>{
+ ensure(){if(this.worker)return;const w=this.worker=new Worker('https://epivalent.github.io/mosh-canopy/assets/semantic/search-worker.mjs?v=go1',{type:'module'});w.onmessage=({data:m})=>{
   if(w!==this.worker)return;
   if(m.type==='ready'){this.info=m.info;this.updateCoverage();if(!this.panel.hidden)this.counter.textContent='Index loaded · warming search models…';return}
   if(m.type==='prepared'){this.prepared=true;if(!this.panel.hidden&&!this.pending.size)this.counter.textContent='Meaning search ready';return}

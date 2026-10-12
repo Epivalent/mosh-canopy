@@ -28,7 +28,7 @@ window.WordHelices = class WordHelices {
   }
   key(clip){return clip?.mia?.id||clip?.mia?.mp4||clip?.id;}
   ensureSearchWorker(){if(this.searchWorker)return this.searchWorker;this.searchError=null;
-    const entry=new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/concordance-worker.js?v=meaning1',location.href).href,boot=URL.createObjectURL(new Blob(['importScripts('+JSON.stringify(entry)+');'],{type:'text/javascript'})),worker=new Worker(boot);this.searchWorker=worker;
+    const entry=new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/concordance-worker.js?v=go1',location.href).href,boot=URL.createObjectURL(new Blob(['importScripts('+JSON.stringify(entry)+');'],{type:'text/javascript'})),worker=new Worker(boot);this.searchWorker=worker;
     worker.addEventListener('message',()=>URL.revokeObjectURL(boot),{once:true});
     const fail=message=>{this.searchError=message;this.searchReady=false;for(const [id,p]of this.requests)if(p.worker===worker){clearTimeout(p.timer);p.reject(Error(message));this.requests.delete(id);}worker.terminate();if(this.searchWorker===worker)this.searchWorker=null;URL.revokeObjectURL(boot);};
     worker.onmessage=({data})=>{if(data.type==='ready'){this.searchReady=true;return;}if(data.type==='error'){fail(data.message);return;}const pending=this.requests.get(data.requestId);
@@ -38,7 +38,7 @@ window.WordHelices = class WordHelices {
     worker.onerror=e=>fail(e.message);for(const args of this.livePublications)worker.postMessage({type:'ingest-live',...args});return worker;
   }
   cancelSearch(){this.searchWorker?.postMessage({type:'cancel-stack'});}
-  async ask(type,args){if(this.workerError&&!['concordance','passage-stack','stack-pages','sheet','sheet-tile'].includes(type))throw Error(this.workerError);const worker=['concordance','passage-stack','stack-pages','sheet','sheet-tile'].includes(type)?this.ensureSearchWorker():this.worker;
+  async ask(type,args){if(this.workerError&&!['concordance','passage-stack','stack-pages','sheet','sheet-tile','go-title','go-word'].includes(type))throw Error(this.workerError);const worker=['concordance','passage-stack','stack-pages','sheet','sheet-tile','go-title','go-word'].includes(type)?this.ensureSearchWorker():this.worker;
     if(type==='live-transcript'){this.livePublications.add(args);this.searchWorker?.postMessage({type:'ingest-live',...args});}
     try{return await new Promise((resolve,reject)=>{const requestId=++this.requestId,timer=setTimeout(()=>{this.requests.delete(requestId);reject(Error('Transcript request timed out'));},type==='concordance'?120000:30000);this.requests.set(requestId,{resolve,reject,timer,worker});worker.postMessage({type,requestId,...args});});
     }finally{if(type==='live-transcript')this.livePublications.delete(args);}
