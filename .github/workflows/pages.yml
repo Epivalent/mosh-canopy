@@ -18,6 +18,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
+      - name: Check feature dependencies before replacing the live app
+        run: node .github/scripts/check-launch.mjs https://epivalent.github.io/mosh-canopy/ --build .
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
@@ -32,3 +34,7 @@ jobs:
         env:
           SITE_URL: ${{ steps.deployment.outputs.page_url }}
         run: node .github/scripts/check-previews.mjs "$SITE_URL"
+      - name: Verify playback and search dependencies after deployment
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node .github/scripts/check-launch.mjs "$SITE_URL"

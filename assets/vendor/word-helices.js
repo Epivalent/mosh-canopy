@@ -10,7 +10,7 @@ window.WordHelices = class WordHelices {
     this.fragmentShader="uniform sampler2D uText;uniform vec2 uAtlasSize;uniform float uRowHeight,uStrength;\n        varying vec2 vUv;varying float vText,vBase,vLength,vPulse,vAlpha,vTint;\n        void main(){if(vText<0.||vText>vLength)discard;\n          float packed=vBase+vText,row=floor(packed/uAtlasSize.x);\n          vec2 tex=vec2(mod(packed,uAtlasSize.x)/uAtlasSize.x,1.-(row+1.-vUv.y)*uRowHeight/uAtlasSize.y);\n          float alpha=texture2D(uText,tex).a*vAlpha*uStrength*(.55+.4*vPulse);if(alpha<.012)discard;\n          vec3 color=mix(vec3(.93,.83,.63),vec3(.63,.84,.85),vTint);\n          color=mix(color,vec3(1.,.97,.86),vPulse*.45);gl_FragColor=vec4(color,alpha);\n        }";
     this.ready=new Promise(resolve=>this.resolveReady=resolve);
     this.requests=new Map();this.requestId=0;this.livePublications=new Set();
-    const entry=new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/word-ribbon-worker.js?v=20',location.href).href;
+    const entry=new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/word-ribbon-worker.js?v=recovery1',location.href).href;
     const bootURL=URL.createObjectURL(new Blob(['importScripts('+JSON.stringify(entry)+');'],{type:'text/javascript'}));
     this.worker=new Worker(bootURL);this.worker.addEventListener('message',()=>URL.revokeObjectURL(bootURL),{once:true});
     this.worker.onerror=e=>{this.workerReady=false;this.workerError=e.message;console.error('Transcript worker:',e.message);for(const [id,p]of this.requests)if(p.worker===this.worker){clearTimeout(p.timer);p.reject(Error(e.message));this.requests.delete(id);}};
@@ -52,7 +52,7 @@ window.WordHelices = class WordHelices {
     // Reject empty space before any GPU work. Include the full ribbon width and
     // helix radius; the shader pass below retains exact occlusion and word UVs.
     const reach=this.radius+this.size*(44/28);
-    const visible=[...this.bundles.values()].filter(b=>b.mesh.visible&&b.geometry.instanceCount&&(!ribbon||b.linkRefs?.some(l=>ray.ray.distanceSqToSegment(l.a,l.b)<=reach*reach||this.common.uUnfold.value>0&&(l.a.distanceTo(this.common.uStage.value)<2||l.b.distanceTo(this.common.uStage.value)<2))));if(!visible.length)return null;
+    const visible=[...this.bundles.values()].filter(b=>b.mesh.visible&&b.geometry.instanceCount&&b.linkRefs?.some(l=>ray.ray.distanceSqToSegment(l.a,l.b)<=reach*reach||this.common.uUnfold.value>0&&(l.a.distanceTo(this.common.uStage.value)<2||l.b.distanceTo(this.common.uStage.value)<2)));if(!visible.length)return null;
     const target=this.pickTarget||=new T.WebGLRenderTarget(5,5,{minFilter:T.NearestFilter,magFilter:T.NearestFilter,depthBuffer:true}),pickScene=this.pickScene||=new T.Scene();
     for(const mesh of [...pickScene.children])pickScene.remove(mesh);
     const key=ribbon?'hoverPick':'wordPick';

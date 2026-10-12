@@ -275,11 +275,11 @@ details summary{cursor:pointer;margin:8px 0}
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/collage-bank.js?v=3"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/collage-composer.js?v=1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/net-collage.js?v=6"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/word-helices.js?v=meaning1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/word-helices.js?v=recovery1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/published-assets.js?v=1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/bead-previews.js?v=published-assets1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-text-pages.js?v=2"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/semantic-search.js?v=published-assets1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/semantic-search.js?v=launch-recovery1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-concordance.js?v=meaning3"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/clip-captions.js?v=14"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/helix-transcript.js?v=neon1"></script>
@@ -833,13 +833,14 @@ async function syncPlayback(el,clock,valid=()=>true){
 function seekTo(v, t, timeout = 5000, signal){
   return new Promise((res, rej) => { let done = false, retry;
     const fin = (ok,error) => { if (done) return; done = true; v.removeEventListener('seeked', on); v.removeEventListener('loadeddata', on);
-      v.removeEventListener('canplay', on); v.removeEventListener('loadedmetadata', start);signal?.removeEventListener('abort',abort);clearTimeout(retry);clearTimeout(tm); ok ? res() : rej(error||new Error('seek timeout')); };
+      v.removeEventListener('canplay', on); v.removeEventListener('loadedmetadata', start);v.removeEventListener('error',failed);signal?.removeEventListener('abort',abort);clearTimeout(retry);clearTimeout(tm); ok ? res() : rej(error||new Error('seek timeout')); };
     const abort=()=>fin(false,new Error('Film selection superseded.'));
+    const failed=()=>fin(false,new Error(v.error?.message||'The film could not be loaded.'));
     const on = () => { if (!v.seeking && v.readyState >= 2 && (v.youtubeDirect&&v.lastSeekTarget===t||Math.abs(v.currentTime - t) < 0.15)) fin(true); };
     const start = () => { if (done) return; if (!v.seeking && Math.abs(v.currentTime - t) < 0.03 && v.readyState >= 2) return fin(true);
       try { v.currentTime = t; } catch (e) { retry=setTimeout(start, 300); } };
-    v.addEventListener('seeked', on); v.addEventListener('loadeddata', on); v.addEventListener('canplay', on); v.addEventListener('loadedmetadata', start);
-    const tm = setTimeout(() => fin(false), timeout);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();else if (v.readyState >= 1) start(); });
+    v.addEventListener('seeked', on); v.addEventListener('loadeddata', on); v.addEventListener('canplay', on); v.addEventListener('loadedmetadata', start);v.addEventListener('error',failed);
+    const tm = setTimeout(() => fin(false), timeout);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();else if(v.error)failed();else if (v.readyState >= 1) start(); });
 }
 // draw any clip frame to a context with cover fit
 function drawClip(c, ctx, w, h, t, srcEl){
@@ -2396,6 +2397,8 @@ const Show = {
       this.nextClip = null; this.nextCell = null; this.focusedNext = false; } } }
   },
   async selectClip(clip,cell){
+    // Keep the in-flight load when the same destination is clicked again.
+    if(this.manualPreparing&&this.nextClip===clip)return;
     const fromMontage=Montage?.active&&clip===Montage.clip;
     const audio=AudioState.streams.get(clip),source=clip.player?.readyState>=2?clip.player:audio?.el;
     const t=fromMontage?Montage.filmTime:source?Archive.filmTime(clip,source):(clip.fullPlayback?0:clip.preview?.start||0)+(clip.videoPlayhead||0);
@@ -2413,13 +2416,13 @@ const Show = {
   },
   async playDirect(clip,cell,timestamp,origin){
     this.previewSampling?.controller.abort();
-    this.preparationAbort?.abort();this.preparationAbort=null;
+    this.preparationAbort?.abort();const controller=this.preparationAbort=new AbortController();
     const token=++this.selectionToken;this.cancelFull();this.manualPreparing=true;this.selecting=true;this.next=null;this.nextClip=clip;this.nextCell=cell;this.focusedNext=true;this.paused=false;
     if(!this.segVideo)this.go('net');
     $('phase').textContent='Opening film';$('seginfo').textContent=clip.name;
     try{Archive.startVideo(clip,{priority:true,userInitiated:true});const until=performance.now()+60000;while((clip.player?.readyState||0)<2&&performance.now()<until&&token===this.selectionToken){if(clip.broken||!clip.player&&clip.lastMediaError)throw Error(clip.lastMediaError?.message||'YouTube could not play this film.');await sleep(100);}
       if(token!==this.selectionToken)throw Error('Film selection superseded.');const v=clip.player;if(!(v?.readyState>=2))throw Error(clip.lastMediaError?.message||'The YouTube player did not become ready.');
-      if(origin!=='bead')await seekTo(v,timestamp,25000);if(token!==this.selectionToken)throw Error('Film selection superseded.');
+      if(origin!=='bead')await seekTo(v,timestamp,25000,controller.signal);if(token!==this.selectionToken)throw Error('Film selection superseded.');
       if(this.nextVideo&&this.nextVideo!==v)Archive.releaseProbe(this.nextVideoClip,this.nextVideo);if(this.segVideo&&this.segVideo!==v)Archive.releaseProbe(this.seg.clip,this.segVideo);
       if(this.enc){this.enc.cancel();this.enc=null;}Stack.dispose();this.cuts=[];this.segVideo=null;this.seg=null;
       clip.viewPaused=false;clip.videoDone=false;clip.audioDone=false;
@@ -2431,7 +2434,7 @@ const Show = {
     Montage?.cancel(false);
     this.previewSampling?.controller.abort();
     if(clip.retro?.direct)return this.playDirect(clip,cell,timestamp,origin);
-    this.preparationAbort?.abort();this.preparationAbort=null;
+    this.preparationAbort?.abort();const controller=this.preparationAbort=new AbortController();
     this.cancelFull();const token=++this.selectionToken;this.manualPreparing=true;this.selecting=true;post.u.uGlitch.value=0;post.u.uFlash.value=0;screenU.uAmt.value=0;Captions.request(WordTrails.key(clip));
     const valid=()=>token===this.selectionToken;
     if(origin!=='controls'){
@@ -2448,13 +2451,13 @@ const Show = {
       if(!reuseFull&&origin!=='bead')try{preview=await MIA.shotAt(clip,timestamp);}catch(e){preview=null;console.warn('Preview index unavailable; opening original film',e.message);}
       if(!valid())throw Error('Film selection superseded.');
       if(reuseFull){
-        v=clip.player;if(origin!=='bead')await seekTo(v,timestamp,30000);this.fullTask=null;
+        v=clip.player;if(origin!=='bead')await seekTo(v,timestamp,30000,controller.signal);this.fullTask=null;
       }else if(preview){
         const src=MIA.media({mp4:preview.mp4}),offset=preview.start;
         const existing=clip.player;
-        if(existing?.readyState>=2&&existing.getAttribute('src')===src){v=existing;if(origin!=='bead'||existing.ended)await seekTo(v,clamp(timestamp-offset,0,v.duration-.05),30000);}
-        else{v=Archive.probe(clip,src,offset);await seekTo(v,clamp(timestamp-offset,0,preview.end-preview.start-.05),30000);await v.play();}
-      }else{v=full;await seekTo(v,timestamp,30000);await v.play();this.fullTask=null;}
+        if(existing?.readyState>=2&&existing.getAttribute('src')===src){v=existing;if(origin!=='bead'||existing.ended)await seekTo(v,clamp(timestamp-offset,0,v.duration-.05),30000,controller.signal);}
+        else{v=Archive.probe(clip,src,offset);await seekTo(v,clamp(timestamp-offset,0,preview.end-preview.start-.05),30000,controller.signal);await v.play();}
+      }else{v=full;await seekTo(v,timestamp,30000,controller.signal);await v.play();this.fullTask=null;}
       if(!valid())throw Error('Film selection superseded.');
       if(this.nextVideo&&this.nextVideo!==v)Archive.releaseProbe(this.nextVideoClip,this.nextVideo);
       if(this.segVideo&&this.segVideo!==v)Archive.releaseProbe(this.seg.clip,this.segVideo);
@@ -2930,13 +2933,14 @@ const MIA = {
     return 'https://mosh-canopy-assets.moshcanopy.workers.dev/film' + u.pathname + u.search;
   },
   async shotAt(c,time){if(!c.mia?.shots)return null;
-    c.shotList ||= fetch(c.mia.shots,{priority:'high',signal:AbortSignal.timeout(10000)}).then(r=>{if(!r.ok)throw Error('Shot index unavailable');return r.json();}).catch(error=>{c.shotList=null;throw error;});
+    const url=PublishedAssets.url(c.mia.shots,new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/catalog.json',location.href));
+    c.shotList ||= fetch(url,{priority:'high',signal:AbortSignal.timeout(10000)}).then(r=>{if(!r.ok)throw Error('Shot index unavailable');return r.json();}).catch(error=>{c.shotList=null;throw error;});
     const shots=await c.shotList;return shots.find(s=>s.start<=time&&s.end>time)||null;
   },
   label(s){ return [s.title || 'Untitled shot', s.year].filter(Boolean).join(' · '); },
   async getJSON(url){
     if (!this.catalogData){
-      this.catalogData = fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/catalog.json').then(r => { if (!r.ok) throw Error(`catalog returned ${r.status}`); return r.json(); });
+      this.catalogData = fetch('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/catalog.json').then(r => { if (!r.ok) throw Error(`catalog returned ${r.status}`); return r.json(); }).catch(error=>{this.catalogData=null;throw error;});
     }
     const catalog = await this.catalogData;
     if (url === '/mia/collections') return { collections: catalog.collections };

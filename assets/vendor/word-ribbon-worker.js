@@ -1,11 +1,11 @@
 importScripts(...['https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-published.js?v=2','https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv-caption-index.js?v=7'].map(p=>new URL(p,self.location.origin).href));
 // Playback transcript loading and rasterisation have their own worker.
-importScripts(new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-store.js?v=2',self.location.origin).href);
+importScripts(new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/transcript-store.js?v=recovery1',self.location.origin).href);
 importScripts(new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/concordance-index.js?v=7',self.location.origin).href);
 importScripts(new URL('https://epivalent.github.io/mosh-canopy/assets/vendor/live-transcripts.js',self.location.origin).href);
 const store=new TranscriptStore(),live=new LiveTranscripts();let queue=Promise.resolve();
 if(store.retroIndex)store.retroIndex.onUpdate=data=>{store.invalidate(data.id);postMessage({type:'live-update',...data});};
-const loadFilm=async id=>{const base=await store.load(id);await live.ready;return live.mergeFilm(id,base);};
+const loadFilm=async id=>{const base=await store.load(id);publishMIA(store.metadata);await live.ready;return live.mergeFilm(id,base);};
 // Published MRT captions are already searchable, but also have to enter the
 // ribbon inventory. Previously only MIA and newly captured speech were added,
 // so cached YouTube transcripts were filtered out before any ribbon was built.
@@ -23,10 +23,13 @@ async function publishInventory(refresh=false){
 }
 publishInventory().catch(error=>postMessage({type:'error',message:'MRT transcript catalogue: '+error}));
 
-store.index.then(data=>{
+let miaInventory;
+function publishMIA(data){
+ if(!data||data===miaInventory)return;miaInventory=data;
  const added=Object.entries(data.films).filter(([,f])=>f.words).map(([id,f])=>({id,title:f.title}));
  postMessage({type:'catalog',added,removed:[],index:{updated:[],films:data.total},coverage:{scope:data.scope,speech:data.speech,partial:data.partial,pending:data.pending,noAudio:data.noAudio,noSpeech:data.noSpeech,words:data.words},finished:data.complete,total:data.total,processed:data.processed,errors:data.errors,revision:data.revision});
-}).catch(error=>postMessage({type:'error',message:String(error)}));
+}
+store.index.then(publishMIA).catch(error=>postMessage({type:'error',message:String(error)}));
 live.ready.then(()=>{for(const [id,segments]of live.segments){if([...segments.values()].some(s=>s.words.length))postMessage({type:'live-update',id,title:[...segments.values()][0].title,wordCount:1});}});
 async function render(id,time=0){
  const film=await loadFilm(id);if(!film?.words?.length){postMessage({type:'empty',id});return;}
@@ -57,7 +60,7 @@ onmessage=({data})=>{
  if(data.type==='refresh-published'){publishInventory(true).catch(error=>postMessage({type:'error',message:'MRT transcript catalogue: '+error}));return;}
  const reply=promise=>promise.then(result=>postMessage({type:data.type,requestId:data.requestId,result})).catch(error=>postMessage({type:'response-error',requestId:data.requestId,message:String(error)}));
  if(data.type==='coverage')reply((async()=>{
-  const index=await store.index;await live.ready;
+  const index=await store.available();publishMIA(index);await live.ready;
   return Object.fromEntries(await Promise.all(data.ids.map(async id=>{
    const base=index.films[id],segments=[...live.segments.get(id)?.values()||[]],ranges=[...(base?.ranges||[])];
    for(const s of segments)ranges.push([s.start,s.end]);
@@ -68,7 +71,7 @@ onmessage=({data})=>{
   })));
  })());
  if(data.type==='retain')store.retain('ribbons',data.ids);
- if(data.type==='prefetch'){store.retain('preparation',data.ids);for(const id of data.ids)store.load(id,'low').catch(()=>{});}
+ if(data.type==='prefetch'){store.retain('preparation',data.ids);for(const id of data.ids)store.load(id,'low').then(()=>publishMIA(store.metadata)).catch(()=>{});}
  if(data.type==='live-transcript'){
   const task=queue.then(async()=>{await live.put(data);const film=await loadFilm(data.id),wordCount=film?.words.length||0;postMessage({type:'live-update',id:data.id,title:data.title,wordCount});return {words:wordCount};});queue=task.catch(()=>{});reply(task);
  }

@@ -60,7 +60,7 @@ globalThis.SemanticSearch=class {
  async play(p){this.hide();this.c.close();try{await this.c.jump(p.id,p.start)}catch(e){this.c.notify(e.message)}}
  showError(e){this.counter.textContent='Meaning search: '+e.message;this.c.notify(e.message)}
  cancel(){this.token=++this.serial;this.deferred=null;this.loadingMore=false;this.worker?.postMessage({type:'cancel'});for(const p of this.pending.values())p.reject(new Error('Search superseded'));this.pending.clear()}
- fail(e){this.cancel();this.worker?.terminate();this.worker=null;this.info=null;this.showError(e)}
+ fail(e){this.cancel();this.worker?.terminate();this.worker=null;this.info=null;this.prepared=false;this.showError(e)}
  release(){this.cancel();this.worker?.terminate();this.worker=null;this.info=null;this.prepared=false;this.hits=[];this.previews.clear();this.host.replaceChildren();this.updateCoverage();this.counter.textContent='Meaning-search models released. Submit a question to load them again.'}
 };
 

@@ -15,7 +15,17 @@ self.TranscriptStore=class TranscriptStore {
   });
  }
  invalidate(id){this.cache.delete(id);this.pending.delete(id);}
- async refresh(){const r=await fetch(new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/index.json',self.location.origin),{cache:'no-cache'});if(!r.ok)throw Error('Transcript manifest: HTTP '+r.status);return this.metadata=await r.json();}
+ refresh(){
+  if(this.refreshing)return this.refreshing;
+  const task=(async()=>{const r=await fetch(new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/index.json',self.location.origin),{cache:'no-cache'});if(!r.ok)throw Error('Transcript manifest: HTTP '+r.status);return this.metadata=await r.json();})();
+  this.index=this.refreshing=task;
+  const done=()=>{if(this.refreshing===task)this.refreshing=null;};task.then(done,done);return task;
+ }
+ async available(){
+  // A failed startup request is not a permanent verdict on this session.
+  // Reuse a valid snapshot, or retry once on the next actual transcript read.
+  try{return await this.index;}catch(error){return this.metadata||this.refresh();}
+ }
  async read(file,priority='low'){
   const r=await fetch(new URL('https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/assets/transcripts/'+file,self.location.origin),{cache:'force-cache',priority});if(!r.ok)throw Error('Transcript: HTTP '+r.status);
   return new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json();
@@ -28,11 +38,11 @@ self.TranscriptStore=class TranscriptStore {
  }
  async readFilm(job){
   if(job.id.startsWith('yt:')&&this.retroIndex)return this.retroIndex.film(job.id);
-  const index=await this.index,meta=index.films[job.id];
+  const index=await this.available(),meta=index.films[job.id];
   return meta?.file?this.read(meta.file,job.priority):meta?{...meta,words:[]}:undefined;
  }
  pump(){while(this.running<8&&this.queue.length){this.queue.sort((a,b)=>Number(b.priority==='high')-Number(a.priority==='high'));const job=this.queue.shift();this.running++;
   this.readFilm(job).then(film=>{this.expand(film);if(this.pending.get(job.id)===job&&this.wanted.has(job.id))this.cache.set(job.id,film);job.resolve(film);},job.reject).finally(()=>{if(this.pending.get(job.id)===job)this.pending.delete(job.id);this.running--;this.pump();});
  }}
- async corpus(){const index=await this.index,data=await this.read(index.corpus.file);for(const film of Object.values(data.films))this.expand(film);return data;}
+ async corpus(){const index=await this.available(),data=await this.read(index.corpus.file);for(const film of Object.values(data.films))this.expand(film);return data;}
 };
