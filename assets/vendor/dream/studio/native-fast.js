@@ -1,6 +1,6 @@
 import {NativePresent} from './native-present.js?v=flow5';
-import {NativeRuntime} from './native-runtime.js?v=direct-assets1';
-import {nativeSchedule} from './native-prefix.js?v=flow5';
+import {NativeRuntime} from './native-runtime.js?v=preparation-progress1';
+import {nativeSchedule} from './native-prefix.js?v=preparation-progress1';
 import {noiseBank} from './native-noise.js';
 import {numberToHalfBits} from './platform.js';
 const half=x=>Uint16Array.from(x,numberToHalfBits),latent=[1,4,64,64],scalar=[1,1,1,1];
@@ -8,24 +8,27 @@ const half=x=>Uint16Array.from(x,numberToHalfBits),latent=[1,4,64,64],scalar=[1,
 // Each completed cycle executes ALL selected learned passes, then one decode.
 export class NativeFast {
  async load(progress,provider='npu'){
+  const names=['tail-reuse','tail-guide','decoder'];progress.models?.(names);
   const r=this.r=await new NativeRuntime(progress).load(provider);
-  this.tail=await r.session('tail-reuse');this.guideSession=await r.session('tail-guide');this.decoder=await r.session('decoder');
-  const spec=r.manifest.models['tail-reuse'];this.f={};for(const [k,shape]of Object.entries(spec.inputs))this.f[k]=await r.tensor(shape);
-  this.features=await Promise.all(Array.from({length:4},()=>r.tensor([1,320,64,64])));
-  this.times=await Promise.all(Array.from({length:4},()=>r.tensor([1,1280,1,1])));
-  this.noises=await Promise.all(Array.from({length:4},()=>r.tensor(latent)));
-  this.encoded=await r.tensor(latent);this.ones=await r.tensor([1,1,64,64],half(new Float32Array(4096).fill(1)));
-  this.scalar={};for(const k of ['alpha','beta','noiseScale','influence','step'])this.scalar[k]=await r.tensor(scalar);
-  this.outputs=[];for(let i=0;i<2;i++){const b={};for(const [k,shape]of Object.entries(spec.outputs))b[k]=await r.tensor(shape);this.outputs.push(b);}
-  this.states=[];for(let i=0;i<2;i++)this.states.push({clean:await r.tensor(latent),source:await r.tensor(latent)});
-  this.init=await r.graph('initial-noisy-sample',{source:latent,noise:latent,alpha:scalar,beta:scalar,noiseScale:scalar},(b,x)=>({sample:b.add(b.mul(x.source,x.alpha),b.mul(b.mul(x.noise,x.beta),x.noiseScale))}));
-  this.copyState=await r.graph('initialize-state',{clean:latent,source:latent},(b,x)=>{const one=b.constant({dataType:'float16',shape:[1]},half([1]));return {clean:b.mul(x.clean,one),source:b.mul(x.source,one)}});
-  this.evolve=await r.graph('retained-state',{source:latent,previous:latent,state:latent,target:latent,influence:scalar,step:scalar,mask:[1,1,64,64],background:latent},(b,x)=>{
+  const jobs=[];const prepare=p=>{p.catch(()=>{});jobs.push(p);};
+  prepare(Promise.all(names.map(name=>r.session(name))).then(([tail,guide,decoder])=>{this.tail=tail;this.guideSession=guide;this.decoder=decoder;}));
+  const spec=r.manifest.models['tail-reuse'];prepare(r.tensorMap(spec.inputs).then(value=>{this.f=value;}));
+  prepare(Promise.all(Array.from({length:4},()=>r.tensor([1,320,64,64]))).then(value=>{this.features=value;}));
+  prepare(Promise.all(Array.from({length:4},()=>r.tensor([1,1280,1,1]))).then(value=>{this.times=value;}));
+  prepare(Promise.all(Array.from({length:4},()=>r.tensor(latent))).then(value=>{this.noises=value;}));
+  prepare(r.tensor(latent).then(value=>{this.encoded=value;}));prepare(r.tensor([1,1,64,64],half(new Float32Array(4096).fill(1))).then(value=>{this.ones=value;}));
+  prepare(r.tensorMap(Object.fromEntries(['alpha','beta','noiseScale','influence','step'].map(k=>[k,scalar]))).then(value=>{this.scalar=value;}));
+  prepare(Promise.all(Array.from({length:2},()=>r.tensorMap(spec.outputs))).then(value=>{this.outputs=value;}));
+  prepare(Promise.all(Array.from({length:2},()=>r.tensorMap({clean:latent,source:latent}))).then(value=>{this.states=value;}));
+  prepare(r.graph('initial-noisy-sample',{source:latent,noise:latent,alpha:scalar,beta:scalar,noiseScale:scalar},(b,x)=>({sample:b.add(b.mul(x.source,x.alpha),b.mul(b.mul(x.noise,x.beta),x.noiseScale))})).then(value=>{this.init=value;}));
+  prepare(r.graph('initialize-state',{clean:latent,source:latent},(b,x)=>{const one=b.constant({dataType:'float16',shape:[1]},half([1]));return {clean:b.mul(x.clean,one),source:b.mul(x.source,one)}}).then(value=>{this.copyState=value;}));
+  prepare(r.graph('retained-state',{source:latent,previous:latent,state:latent,target:latent,influence:scalar,step:scalar,mask:[1,1,64,64],background:latent},(b,x)=>{
    const one=b.constant({dataType:'float16',shape:[1]},half([1]));
    const driven=b.add(x.state,b.mul(x.influence,b.sub(x.source,x.previous))),next=b.add(driven,b.mul(x.step,b.sub(x.target,driven)));
    return {clean:b.add(b.mul(x.mask,next),b.mul(b.sub(one,x.mask),x.background)),source:b.mul(x.source,one)};
-  });
-  this.presenter=await new NativePresent().load(r);this.decoded=this.presenter.tensor;this.rawGuide=await r.tensor([1,3,512,512]);this.guideDirty=true;this.readyPasses=new Set();this.pendingFeatures=new Map();this.stateIndex=0;return this;
+  }).then(value=>{this.evolve=value;}));
+  prepare(new NativePresent().load(r).then(value=>{this.presenter=value;this.decoded=value.tensor;}));prepare(r.tensor([1,3,512,512]).then(value=>{this.rawGuide=value;}));
+  await Promise.all(jobs);this.guideDirty=true;this.readyPasses=new Set();this.pendingFeatures=new Map();this.stateIndex=0;return this;
  }
  configure(cfg,noises,epoch){
   this.desiredEpoch=epoch;this.pendingConfig={cfg:{...cfg}};

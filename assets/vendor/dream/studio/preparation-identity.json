@@ -1,0 +1,106 @@
+{
+  "format": 1,
+  "translator": {
+    "ort.all.bundle.min.mjs": "781899d39e1162c435e14c9dec228f7aff0514765f161ea4d29a4afde38a7d15",
+    "ort-wasm-simd-threaded.jsep.mjs": "709853412fd1ffc34247af1e73569227b5b79629c5ca3f59cc39cf7e500e4947",
+    "ort-wasm-simd-threaded.jsep.wasm": "3ad23231b5bd6d9dda55a7f84606315e0bf35b6750c28ee993c987c54cacab0f"
+  },
+  "models": {
+    "encoder": {
+      "graph": "5b253eb1f72a4e5509c173efccaa0f639c4454923cb03857a8d31a7846178a80",
+      "weights": "623d1ddf076010d07270762910ccc0f40006c26542df311b67a9814047674e49"
+    },
+    "decoder": {
+      "graph": "9e1571dd4e33ab4eea54c6ea30a330e043fe2f9b67c9d323ad42ccac6bcf995f",
+      "weights": "602084cdcd8879b78b4dac15a5e91b635ea05b05029675f115b8ebc440c37d6a"
+    },
+    "tail-ane": {
+      "graph": "de1531dddde1a0c2a1647241aa2f08046005f7fde6b40aee0896fb1b0066de7e",
+      "weights": "b57dd0ff3745a03727b12795de3056583430e008bee81379d678533d8546da13"
+    },
+    "text": {
+      "graph": "81bb36126268947130dd2d669312e3b8878098be8986b7d7b71adeb8cf6e9671",
+      "weights": "c25bad531230171c92409aac5987e81f1c5e5cd73dd41f75b5d8cad5d750e011"
+    },
+    "gpu-control-start": {
+      "graph": "ad5a40ad2ae4a2c4c2d9798717a264d5af3950ac33e5ce0d3139e8040ea7cc99",
+      "weights": "0facbe63c30a3ac52cf369575a1afd3a22ba28bea9cba24db8c6e4d8b8afd971"
+    },
+    "gpu-control-down-0": {
+      "graph": "ded5240011d51b370cc7dc6d25ddbca8352762663c61b59f73bd9e9450fbec65",
+      "weights": "9afeee77f3eae489eb10c684fff1f74a928ac6ee8819bcc5c4df1cd38a1b33ae"
+    },
+    "gpu-control-down-1": {
+      "graph": "e705f41a0b65ffccb046c438512dad57bc3dbbf44b59d795137f154e5bfb5011",
+      "weights": "2ac31f4508a5c95c4caba3965040de510660991951b78e78e5d363dd884e8d6a"
+    },
+    "gpu-control-down-2": {
+      "graph": "305b14e93781d571675fbfe53835f8e6e398d0427dfd9eb406b72f1f645b80d5",
+      "weights": "de32599eb4eb6bd81bf1456d09f893cabc0b709d08e5decf1983cdfc84939b69"
+    },
+    "gpu-control-down-3": {
+      "graph": "ae864e3ed66860108371e3d8c2ddd5f16c65377d0e00bbd02b590687fb432030",
+      "weights": "324b81f30fd891f2cad75d0ee574d82f512fe54adafeb54314449ded0a7ce84d"
+    },
+    "gpu-control-mid": {
+      "graph": "8f0d97d32c94213eaefcc2d188b69da55c4dc0e5408d07b3d44022c53c60cf47",
+      "weights": "cb65567885dd38903ba0f093f3afe5500f6e5fd2aaf34d0a2f7272a80804fd9d"
+    },
+    "gpu-control-project": {
+      "graph": "0cda64eab6792bb1b87ddb86e3d530b40c6b1796c79177944dab37522bdd0450",
+      "weights": "8c04e563639fc80cac9458b3f2f268edbe8ebc1ea8748faed4ad3296db7f9086"
+    },
+    "tail-guide": {
+      "graph": "315d9240086b4bd6c5c8ee314a1b4a1ca5ec60427d9c4eac1f81f849bf745e94",
+      "weights": "b4cb2d603602bd879b2a1648fc13bb3fa3c253b241bb7b51d5586fba149ead93"
+    },
+    "tail-reuse": {
+      "graph": "a3ea19990586d31bab7000540a63aab567216ef3235eee08d017aea3690802a6",
+      "weights": "c5070ac88af89ef412707150aa54708b7266f7e42eebe63673f437190a942016"
+    },
+    "gpu-unet-start": {
+      "graph": "669dc6135cb4d0447957576e9c24f161822eec77ed86546c210c24218ca5b27f",
+      "weights": "cb9c24c55f9491498efd17399e7a7c32ac689379432c49e7a3b659bebf43c6f7"
+    },
+    "gpu-unet-down-0": {
+      "graph": "8745f7422a1ee0aae108dedcb879e04aea5f0c38a892a1b66340bcd6c83dd2f9",
+      "weights": "ee21f44886b84ea26500ce75b087d039a5fdfa29adac67aaf03b842e412cbbf5"
+    },
+    "gpu-unet-down-1": {
+      "graph": "ef9c9febfdf97aa37651675edadb97097a74a5bc10cce2ed8de405c095fd3b8e",
+      "weights": "dbb1fcccf95b6ce81483aecafb53d8a0c362b39ec5ffa8c49503e0e82574b341"
+    },
+    "gpu-unet-down-2": {
+      "graph": "27813cd77f8fe52bc62313dc28d07abc760a7fd2dffee8d4dfafac229d2820bb",
+      "weights": "c3b9dac0589c4e7e1d370261501e983bf12c3d3d69ad17990236c8c510c9c71d"
+    },
+    "gpu-unet-down-3": {
+      "graph": "24836285af55d3dc8c04feca5388812c24e03918ad4b6c3613844a6b2c471421",
+      "weights": "64fa269cc4e7936ea496c6aa8ba0729fa307385760c4cae101c48e88601574ca"
+    },
+    "gpu-unet-mid": {
+      "graph": "0b14cab61b3711448051224a18d2923cf62d2d72e225bff90eea753b98f27369",
+      "weights": "fdb64e292a52f0bdd7977e9231a402344c81c1dfb3bbc07d9e7723fa77a40f91"
+    },
+    "gpu-unet-up-0": {
+      "graph": "a65d2df8c807737797bd0064a1e5b101519826a377c86f0e529cf5b6d6af3983",
+      "weights": "3e1d0a67324e9e3ef209968e63c573008172d889e70e2b39449077243dafab75"
+    },
+    "gpu-unet-up-1": {
+      "graph": "c8c63d623737ea1a09706c93c28013c32480940155998bbfabc3906b0e83c3bc",
+      "weights": "9a6574d60bb2dc2d250fa7f3b2449f23ebca594cb3e242d34a4e07736f2def6d"
+    },
+    "gpu-unet-up-2": {
+      "graph": "8a7ccbfaef05a97d66933747fb1c77f3c90e8b98950462846e8bb3be3b389b15",
+      "weights": "8b41b73e0c3bc277d57170a5e533058d400dea9aa61a4a43ffd826cd39a89a8b"
+    },
+    "gpu-unet-last-0": {
+      "graph": "df68e76a5fa32b7465479f241628c5174d6579a8f4af9b72b790eaa14d5ce79d",
+      "weights": "cab515d4092b496f6d084a9c6c9830e5ad2ba78b2ee55c234c077d0379a92dda"
+    },
+    "gpu-unet-last-1": {
+      "graph": "19cce0a4ffe0fbfcaf360126f18a6fd47b28a0e63354233908793a0e2a0737c5",
+      "weights": "fbf906cb11c214fc8e537f35b4c0a25ae79499804ab8cb8bae8947355b923cfb"
+    }
+  }
+}

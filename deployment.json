@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-10-12T06:48:48.179Z",
+  "createdAt": "2026-10-12T09:44:18.871Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/",
   "relay": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
@@ -106,8 +106,8 @@
     },
     {
       "file": "assets/vendor/dream/client.js",
-      "bytes": 8371,
-      "sha256": "efb3661345c7e7fb0d63606b90622db645a925f8f36793be53ee6ab928d3ca8f"
+      "bytes": 9618,
+      "sha256": "64811fe97adbdb229ade6d460dbcffb10143e09a807cf240463e6692d8d009f4"
     },
     {
       "file": "assets/vendor/dream/engine-matrix.js",
@@ -121,13 +121,13 @@
     },
     {
       "file": "assets/vendor/dream/feature.css",
-      "bytes": 4969,
-      "sha256": "7f98b28c75a3dc833f1bf06e1b3376eaaf9c46471a3f3e37ebb5b31e5242f235"
+      "bytes": 5668,
+      "sha256": "d018b5a2519effa739effeb007a74ec51718a1364f6e26c9ac0adf4489058d7c"
     },
     {
       "file": "assets/vendor/dream/feature.js",
-      "bytes": 16487,
-      "sha256": "073f291bdfc572b4bb00dcc8fffcad31b2c6c196d089012a5caf2a63d57edea1"
+      "bytes": 17972,
+      "sha256": "3217974e2df85064043bfc97ff3ae66debd151a40cb533366992ca37ca584945"
     },
     {
       "file": "assets/vendor/dream/gpu-canny.js",
@@ -200,6 +200,11 @@
       "sha256": "9e5e371a65e4016f93e29f88e96c6459977ce225a3ae4b780396b3fcb6c060e3"
     },
     {
+      "file": "assets/vendor/dream/studio/graph-checkpoint.js",
+      "bytes": 5856,
+      "sha256": "016425c40f7b08d1153dc465abfc5cc6f7fd2ab0633ca3ffd66cc6f924f14a07"
+    },
+    {
       "file": "assets/vendor/dream/studio/native-control-schema.js",
       "bytes": 618,
       "sha256": "4d0e8818cefbea45513e5d222008381412140ab1494b47742b054826256c6dbf"
@@ -211,8 +216,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-fast.js",
-      "bytes": 8296,
-      "sha256": "21aaf3ae7fba521db060c7e10e9956edd959bb66b603224d17dc3903d5409018"
+      "bytes": 8722,
+      "sha256": "3407ef7096099944b3480c2c86ff6e2f7853116ecdddd5f0c6a488c20547796f"
     },
     {
       "file": "assets/vendor/dream/studio/native-image-upload.js",
@@ -221,8 +226,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-live-worker.js",
-      "bytes": 7795,
-      "sha256": "4a090ce90c8ca86bf68e13611129fdc02125bb838dd415ccf19f0c88a246cf09"
+      "bytes": 8120,
+      "sha256": "059de66ab8aff4446da2c07e5c51ef528b59c8cb17ea71b0753c054750c54ec2"
     },
     {
       "file": "assets/vendor/dream/studio/native-noise.js",
@@ -231,8 +236,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-prefix.js",
-      "bytes": 6464,
-      "sha256": "87bfc7f333104a197135933fb1ce313d641e16637e6a7a4902092f9babb805d5"
+      "bytes": 6755,
+      "sha256": "e0bc397831bf78d79f45b311a7255ad43af5d7d45a43aa0a2f220c86a61afa18"
     },
     {
       "file": "assets/vendor/dream/studio/native-present.js",
@@ -241,8 +246,8 @@
     },
     {
       "file": "assets/vendor/dream/studio/native-runtime.js",
-      "bytes": 4815,
-      "sha256": "72fab5bd8a239c75413b4e32688a1a7e867b5e82eebfc8c1239abac2518bf371"
+      "bytes": 6641,
+      "sha256": "8bb78360988b47d68cccfc0a4539c956ec22265c7a7691299335d15a8a1872d2"
     },
     {
       "file": "assets/vendor/dream/studio/native-tokenizer.js",
@@ -270,9 +275,19 @@
       "sha256": "c499fc7fe26b027af57fac803fff32702ce00d2f17b2893f6b8782f3d6f27116"
     },
     {
+      "file": "assets/vendor/dream/studio/preparation-identity.json",
+      "bytes": 5111,
+      "sha256": "899724067c080228ea9b2ef2767738cab79d2de18c96ec0b1f5c8abb98b08af8"
+    },
+    {
+      "file": "assets/vendor/dream/studio/prepared-models.js",
+      "bytes": 5502,
+      "sha256": "04661caf6cacf809fd02e56ebb1353782c201aaab28f53660f3d41db157447fa"
+    },
+    {
       "file": "assets/vendor/dream/studio/provenance.json",
-      "bytes": 8561,
-      "sha256": "3dc60b9848ca13d6032598d3a0a5081bd2c9db52f21181f09e476bc5641bfe74"
+      "bytes": 8851,
+      "sha256": "fd42eba8cb6799920199191d53e7e8c70fe9031e4c51f5eb3865b3b0c0850765"
     },
     {
       "file": "assets/vendor/dream/studio/studio-gpu.js",
@@ -311,8 +326,8 @@
     },
     {
       "file": "assets/vendor/dream-film.js",
-      "bytes": 1245,
-      "sha256": "84cc5f2b04f2129ee34d4ea4c3e8b5b88b565618f32ad53f47e68aa0ad9426ae"
+      "bytes": 1252,
+      "sha256": "b88c9bb44d886e6c81629a7f849bffefc936ef9f5560d81e3d1ea35f31f262da"
     },
     {
       "file": "assets/vendor/dream-playback.js",

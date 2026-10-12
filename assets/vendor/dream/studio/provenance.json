@@ -28,10 +28,10 @@
     "gpu-unet-last-1"
   ],
   "files": {
-    "native-live-worker.js": "4a090ce90c8ca86bf68e13611129fdc02125bb838dd415ccf19f0c88a246cf09",
-    "native-runtime.js": "a9f234d26c70f9d1e8e60e6daf9d68de8d9d79da43a5a0143b21668cd8932f32",
-    "native-prefix.js": "87bfc7f333104a197135933fb1ce313d641e16637e6a7a4902092f9babb805d5",
-    "native-fast.js": "21aaf3ae7fba521db060c7e10e9956edd959bb66b603224d17dc3903d5409018",
+    "native-live-worker.js": "059de66ab8aff4446da2c07e5c51ef528b59c8cb17ea71b0753c054750c54ec2",
+    "native-runtime.js": "61a34b0c186a883c04a5c1dd40fc3085a15b49a1255581f82da932a20cd6c169",
+    "native-prefix.js": "e0bc397831bf78d79f45b311a7255ad43af5d7d45a43aa0a2f220c86a61afa18",
+    "native-fast.js": "3407ef7096099944b3480c2c86ff6e2f7853116ecdddd5f0c6a488c20547796f",
     "native-present.js": "e2c86e6f1a45db4ccbd432eb863901f4fd8a7904c61b558140e7a0d8bad65f53",
     "native-image-upload.js": "f88491a2dea7a458750ccbb1983bdd9f432f725714ac4f38940c4a2e7996281b",
     "native-tokenizer.js": "8f36f8f0556e22b0a30b8b674ffd53c01464c56509764b002a8018fcbd4b858f",
@@ -99,7 +99,10 @@
     "turbo-models/gpu-unet-last-1.onnx": "19cce0a4ffe0fbfcaf360126f18a6fd47b28a0e63354233908793a0e2a0737c5",
     "turbo-models/gpu-unet-last-1.data": "4ef52805f367edf4b7f41f0349848a95fd722dd6987a44dd27de541eabcc2942",
     "vendor/webgl-noise-LICENSE": "bdafce1bb01517c9ae6c4f3620c01340790b5e9d039ae9e356347d1174250916",
-    "native-noise.js": "9f07e9b37ccfc7d35bf0d7b8f24abd95e0bb7943afa1e93a8fe0f864373f5b76"
+    "native-noise.js": "9f07e9b37ccfc7d35bf0d7b8f24abd95e0bb7943afa1e93a8fe0f864373f5b76",
+    "graph-checkpoint.js": "016425c40f7b08d1153dc465abfc5cc6f7fd2ab0633ca3ffd66cc6f924f14a07",
+    "prepared-models.js": "04661caf6cacf809fd02e56ebb1353782c201aaab28f53660f3d41db157447fa",
+    "preparation-identity.json": "899724067c080228ea9b2ef2767738cab79d2de18c96ec0b1f5c8abb98b08af8"
   },
   "localPatches": [
     {

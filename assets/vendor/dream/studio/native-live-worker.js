@@ -1,7 +1,7 @@
 // Persistent browser workers. Each queue keeps only the latest complete packet.
-import {NativeRuntime} from './native-runtime.js?v=direct-assets1';
-import {NativePrefix,nativeSchedule} from './native-prefix.js?v=direct-assets1';
-import {NativeFast} from './native-fast.js?v=direct-assets1';
+import {NativeRuntime} from './native-runtime.js?v=preparation-progress1';
+import {NativePrefix,nativeSchedule} from './native-prefix.js?v=preparation-progress1';
+import {NativeFast} from './native-fast.js?v=preparation-progress1';
 import {noiseBank} from './native-noise.js';
 import {StudioGPU} from './studio-gpu.js?v=1';
 import {NativeImageUpload} from './native-image-upload.js';
@@ -12,25 +12,31 @@ const earlyFeatures=new Map();
 let role,engine,cfg,epoch=0,active=true,pending=null,busy=false,ready=false,noises,noiseSeed;
 const send=(type,data={})=>postMessage({type,role,...data});
 const progress=message=>send('status',{message});
+progress.models=names=>send('modelPlan',{names});
+progress.modelReady=name=>send('modelReady',{name});
 
 function configuration(data){cfg=data.cfg;epoch=data.epoch;active=data.active!==false;if(noiseSeed!==cfg.seed){noiseSeed=cfg.seed;noises=noiseBank(cfg.seed)}if(role==='fast'&&ready)engine.configure(cfg,noises,epoch);}
 export class Encoder {
  async load(){
-  const r=this.r=await new NativeRuntime(progress).load('gpu');this.session=await r.session('encoder');
-  const adapter=await navigator.gpu.requestAdapter();this.device=await adapter.requestDevice({requiredFeatures:['shader-f16']});this.width=this.height=512;
+  progress.models(['encoder']);
+  const runtime=new NativeRuntime(progress).load('gpu');
+  const model=runtime.then(async r=>{this.session=await r.session('encoder');});model.catch(()=>{});
+  const device=navigator.gpu.requestAdapter().then(adapter=>adapter.requestDevice({requiredFeatures:['shader-f16']}));
+  const preparation=StudioGPU.create(new OffscreenCanvas(512,512));
+  [this.r,this.device,this.prep]=await Promise.all([runtime,device,preparation]);const r=this.r;this.width=this.height=512;
   this.compute=code=>this.device.createComputePipeline({layout:'auto',compute:{module:this.device.createShaderModule({code}),entryPoint:'main'}});
   this.dispatch=(pipeline,items,groups)=>{const entries=items.map((x,binding)=>({binding,resource:x instanceof GPUBuffer?{buffer:x}:x})),e=this.device.createCommandEncoder(),p=e.beginComputePass();p.setPipeline(pipeline);p.setBindGroup(0,this.device.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries}));p.dispatchWorkgroups(groups);p.end();this.device.queue.submit([e.finish()]);};
   // Only RGB boundaries are exportable; deep feature tensors remain private.
   const {default:unused,...ort}=await import('./ort/ort.all.bundle.min.mjs');
-  this.ml=await r.context.createExportableTensor({dataType:'float16',shape:[1,3,512,512]},this.device);
+  [this.ml,this.output]=await Promise.all([r.context.createExportableTensor({dataType:'float16',shape:[1,3,512,512]},this.device),r.tensor([1,4,64,64])]);
   this.input=ort.Tensor.fromMLTensor(this.ml,{dataType:'float16',dims:[1,3,512,512]});
-  this.output=await r.tensor([1,4,64,64]);
-  this.prep=await StudioGPU.create(new OffscreenCanvas(512,512));this.upload=new NativeImageUpload(this.prep);
+  this.upload=new NativeImageUpload(this.prep);
   this.preparedTexture=this.device.createTexture({size:[512,512],format:'rgba8unorm',usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST|GPUTextureUsage.RENDER_ATTACHMENT});
   
   this.pack=this.compute(`enable f16;@group(0) @binding(0)var a:texture_2d<f32>;@group(0) @binding(1)var<storage,read_write>b:array<f16>;@compute @workgroup_size(128)fn main(@builtin(global_invocation_id)id:vec3u){let i=id.x;if(i>=262144u){return;}let v=textureLoad(a,vec2i(i32(i%512u),i32(i/512u)),0);for(var c=0u;c<3u;c++){b[c*262144u+i]=f16(v[c]);}}`);
   this.texture=this.device.createTexture({size:[512,512],format:'rgba8unorm',usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST|GPUTextureUsage.RENDER_ATTACHMENT});
   this.canny=new GPUCanny(this);this.read=this.device.createBuffer({size:512*512*2,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});
+  await model;
  }
  async encode(p){
   this.stage?.("prepare");const start=performance.now();if(this.epoch!==p.meta.epoch){this.prep.resetSource();this.epoch=p.meta.epoch;}this.prep.configure(p.settings||{});this.stage?.("source upload");this.upload.upload(p.image,this.prep.sourceTex);this.prep.hasSource=true;this.stage?.("prepare tick");this.prep.tick(start);this.stage?.("prepare draw");this.prep.draw(this.prep.programs.prepare,null,{source:this.prep.sourceTex,maskTex:this.prep.masks[this.prep.maskIndex]});

@@ -6,7 +6,7 @@ import {NativeImageUpload} from './studio/native-image-upload.js';
 // The host and workers support continuous, atomic live-control handovers.
 export class DreamRenderer {
  constructor(canvas,callbacks={}){
-  Object.assign(this,{canvas,onStatus:()=>{},onResult:()=>{},onError:()=>{},onFrame:()=>{},onPresentation:()=>{},...callbacks});
+  Object.assign(this,{canvas,onPreparation:()=>{},onStatus:()=>{},onResult:()=>{},onError:()=>{},onFrame:()=>{},onPresentation:()=>{},...callbacks});
   this.settings={};this.workers={};this.stages={};this.histories=new Map();this.results=[];this.epoch=0;this.seq=0;this.running=true;this.ready=false;this.inputBusy=false;this.lastInput=0;this.presentations=0;
   this.capture=document.createElement('canvas');this.capture.width=this.capture.height=512;this.captureContext=this.capture.getContext('2d');
  }
@@ -22,7 +22,9 @@ export class DreamRenderer {
  async load({backend=navigator.platform.startsWith('Win')?'gpu':'npu'}={}){return this.loading??=this.initialize(backend);}
  async initialize(backend){
   if(!navigator.ml||!navigator.gpu)throw Error('Dream studio requires WebNN and WebGPU enabled in this browser.');
-  this.backend=backend;this.gpuCanvas=document.createElement('canvas');const gpu=this.gpu=await StudioGPU.create(this.gpuCanvas);if(this.disposed){gpu.dispose();throw new DOMException('Disposed','AbortError');}
+  this.preparationStarted=performance.now();this.preparationRoles=Object.fromEntries(['encoder','fast','prefix'].map(role=>[role,{names:null,done:new Set()}]));this.onPreparation();
+  this.backend=backend;this.gpuCanvas=document.createElement('canvas');let gpu;
+  const display=(async()=>{gpu=this.gpu=await StudioGPU.create(this.gpuCanvas);if(this.disposed){gpu.dispose();throw new DOMException('Disposed','AbortError');}
   const upload=new NativeImageUpload(gpu),matched=gpu.target(gpu.gl.RGBA8),draw=gpu.draw.bind(gpu);
   gpu.acceptImage=image=>{upload.upload(image,gpu.neuralTex);gpu.ready=true;};
   gpu.setMatchedSource=image=>{upload.upload(image,matched);this.hasMatch=true;};
@@ -33,16 +35,19 @@ export class DreamRenderer {
    // host canvas keeps the film aspect ratio rather than stretching a square.
    const r=this.displayRect;if(r){if(this.canvas.width!==r.width||this.canvas.height!==r.height){this.canvas.width=r.width;this.canvas.height=r.height;}this.displayContext.drawImage(this.gpuCanvas,r.x,r.y,r.w,r.h,0,0,r.width,r.height);this.presentations++;}
   }this.animation=requestAnimationFrame(animate);};this.animation=requestAnimationFrame(animate);
-  for(const role of ['encoder','fast','prefix']){
+  })();
+  const preparation=['encoder','fast','prefix'].map(async role=>{
    if(this.disposed)throw new DOMException('Disposed','AbortError');
    await new Promise((resolve,reject)=>{
-    this.rejectLoad=reject;const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=direct-assets1',import.meta.url),{type:'module'});this.stages[role]='Loading';
+    this.loadRejectors??=new Set();this.loadRejectors.add(reject);const w=this.workers[role]=new Worker(new URL('./studio/native-live-worker.js?v=preparation-progress1',import.meta.url),{type:'module'});this.stages[role]='Loading';
     const fail=message=>{this.stages[role]='Error';reject(Error(message));this.onError(message);};w.onerror=e=>fail(role+': '+e.message);
     w.onmessage=({data:d})=>{
      if(this.disposed){d.bitmap?.close();return;}
      if(d.type==='status'){this.stages[role]=d.message;this.onStatus(role+': '+d.message);}
+     if(d.type==='modelPlan'){this.preparationRoles[role].names=new Set(d.names);this.onPreparation();}
+     if(d.type==='modelReady'){this.preparationRoles[role].done.add(d.name);this.onPreparation();}
      if(d.type==='error')fail(role+': '+d.error);
-     if(d.type==='ready'){this.stages[role]='Ready';resolve();}
+     if(d.type==='ready'){this.stages[role]='Ready';this.onPreparation();this.loadRejectors.delete(reject);resolve();}
      if(d.type==='inputReady')this.acknowledgeInput(d.meta);
      if(d.type==='source'&&d.packet.meta.epoch===this.epoch){this.encodeMs=d.packet.encodeMs;this.cannyMs=d.packet.cannyMs;this.workers.fast.postMessage({type:'source',packet:d.packet});this.workers.prefix.postMessage({type:'source',packet:d.packet});}
      if(d.type==='feature'&&d.packet.meta.epoch===this.epoch)this.workers.fast.postMessage({type:'feature',packet:d.packet});
@@ -57,8 +62,9 @@ export class DreamRenderer {
     };
     w.postMessage({type:'load',role,epoch:this.epoch,cfg:this.modelConfig(),backend,active:this.running&&!!this.settings.Running&&!document.hidden});
    });
-  }
-  this.rejectLoad=null;this.ready=true;this.info={architecture:'browser-studio-sd-turbo-512',backend,workers:3,grid:512};this.broadcast();return this.info;
+  });
+  await Promise.all([display,...preparation]);
+  this.loadRejectors.clear();this.ready=true;this.preparationFinished=performance.now();this.onPreparation();this.info={architecture:'browser-studio-sd-turbo-512',backend,workers:3,grid:512};this.broadcast();return this.info;
  }
  async submit(frame,{time=0}={},ack=()=>{}){
   if(this.disposed||!this.ready||!this.running||!this.settings.Running||document.hidden){frame.close();ack();return;}
@@ -76,6 +82,11 @@ export class DreamRenderer {
  }
  reset(){this.epoch++;this.inputBusy=false;this.inputTicket=null;this.appliedPrompt=undefined;this.hasMatch=false;this.gpu?.resetSource();for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.results=[];this.broadcast();}
  setRunning(value){if(this.running===!!value)return;this.running=!!value;if(this.gpu)this.gpu.lastTick=undefined;this.broadcast();}
+ preparationProgress(){
+  if(!this.preparationRoles)return null;
+  const roles=Object.entries(this.preparationRoles).map(([role,{names,done}])=>({role,total:names?.size??null,done:[...done].filter(name=>names?.has(name)).length,ready:this.stages[role]==='Ready'}));
+  return {ready:this.ready,elapsed:((this.preparationFinished??performance.now())-this.preparationStarted)/1000,known:roles.every(r=>r.total!==null),done:roles.reduce((n,r)=>n+r.done,0),total:roles.reduce((n,r)=>n+(r.total||0),0),roles};
+ }
  diagnostics(){return {ready:this.ready,backend:this.backend,epoch:this.epoch,stages:this.stages,encodeMs:this.encodeMs,cannyMs:this.cannyMs,prefixMs:this.prefixMs,inputSequence:this.seq,presentations:this.presentations,last:this.results.at(-1)};}
- dispose(){if(this.disposed)return;this.disposed=true;this.ready=false;this.running=false;this.rejectLoad?.(new DOMException('Disposed','AbortError'));for(const w of Object.values(this.workers))w.terminate();cancelAnimationFrame(this.animation);for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.gpu?.dispose();}
+ dispose(){if(this.disposed)return;this.disposed=true;this.ready=false;this.running=false;for(const reject of this.loadRejectors||[])reject(new DOMException('Disposed','AbortError'));this.loadRejectors?.clear();for(const w of Object.values(this.workers))w.terminate();cancelAnimationFrame(this.animation);for(const saved of this.histories.values())saved.image.close();this.histories.clear();this.gpu?.dispose();}
 }

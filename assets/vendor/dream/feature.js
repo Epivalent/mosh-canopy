@@ -1,4 +1,4 @@
-import {DreamRenderer} from './client.js?v=direct-assets1';
+import {DreamRenderer} from './client.js?v=preparation-progress1';
 import {groups} from './studio/native-control-schema.js';
 import {DreamCaptionFeed} from './caption-feed.js?v=2';
 
@@ -8,12 +8,18 @@ export class DreamFeature {
  constructor({mount,controls,onStatus=()=>{},getCaption=()=>null}){
   this.getCaption=getCaption;
   Object.assign(this,{mount,controls,onStatus,enabled:false,active:false,visible:false,revision:0,settings:{},statusHistory:[],updates:0,presented:0});
-  this.style=document.createElement('link');this.style.rel='stylesheet';this.style.href=new URL('./feature.css?v=studio-startup8',import.meta.url);document.head.append(this.style);
+  this.style=document.createElement('link');this.style.rel='stylesheet';this.style.href=new URL('./feature.css?v=preparation-progress1',import.meta.url);document.head.append(this.style);
   this.button=document.createElement('button');this.button.className='dream-launch';this.button.textContent='✦ Dream';this.button.setAttribute('aria-expanded','false');controls.append(this.button);
   this.panel=document.createElement('section');this.panel.className='dream-panel';this.panel.hidden=true;this.panel.setAttribute('aria-label','Dream studio settings');
   this.panel.innerHTML=`<header><div><span class="dream-eyebrow">OPTIONAL VIDEO EFFECT</span><h2>Dream studio</h2></div><button data-action="close" aria-label="Close dream settings">×</button></header>
    <p class="dream-intro">The same dream studio effect as the standalone viewer. Your film and original sound keep playing.</p>
    <div class="dream-state"><i></i><span data-role="status" role="status">Off · no model loaded</span></div>
+   <div class="dream-preparation" data-role="preparation" hidden>
+    <div class="dream-progress-label"><span data-role="preparation-count"></span><span data-role="preparation-time"></span></div>
+    <progress class="dream-progress" data-role="preparation-bar" aria-label="Dream models ready"></progress>
+    <div class="dream-progress-roles" data-role="preparation-roles"></div>
+    <small>Model count, not time remaining. Individual models take different amounts of time.</small>
+   </div>
    <button class="dream-enable" data-action="enable" disabled>Enable dream mode</button>
    <div class="dream-setup" data-role="setup" hidden><p>This browser needs WebNN enabled for Dream. Open <code>brave://flags/#web-machine-learning-neural-network</code>, set it to Enabled, then relaunch Brave. Also enable Experimental WebNN features for GPU tensor sharing.</p><button data-action="copy-setup">Copy WebNN settings address</button></div>
    <label class="dream-backend">Neural device<select data-setting="backend"><option value="npu">WebNN NPU · Mac ANE</option><option value="gpu">WebNN GPU · RTX / other GPUs</option></select></label>
@@ -32,7 +38,7 @@ export class DreamFeature {
   this.$('[data-action=diagnostics]').onclick=async()=>{await navigator.clipboard.writeText(JSON.stringify(this.diagnostics(),null,2));this.$('[data-action=diagnostics]').textContent='Diagnostics copied';};
   for(const type of ['pointerdown','pointermove','click','wheel','keydown'])this.panel.addEventListener(type,e=>{if(type==='keydown'&&e.key==='Escape')this.show(false);e.stopPropagation()});
   this.visibility=()=>this.syncActivity();document.addEventListener('visibilitychange',this.visibility);this.pagehide=()=>this.release();addEventListener('pagehide',this.pagehide);
-  this.metricTimer=setInterval(()=>{const r=this.renderer,now=performance.now();this.$('[data-role=neural]').textContent=r?.ready?(r.results.filter(x=>x.at>now-5000&&x.changed>0).length/5).toFixed(2):'—';this.$('[data-role=display]').textContent=r?.ready?String(r.presentations-(this.previousPresentations||0)):'—';this.previousPresentations=r?.presentations||0;},1000);
+  this.metricTimer=setInterval(()=>{const r=this.renderer,now=performance.now();this.$('[data-role=neural]').textContent=r?.ready?(r.results.filter(x=>x.at>now-5000&&x.changed>0).length/5).toFixed(2):'—';this.$('[data-role=display]').textContent=r?.ready?String(r.presentations-(this.previousPresentations||0)):'—';this.previousPresentations=r?.presentations||0;this.preparationStatus();},1000);
  }
  async buildControls(){
   const response=await fetch(new URL('./studio/native-controls.json',import.meta.url));if(!response.ok)throw Error('Could not load Dream studio controls');const {controls}=await response.json();const byName=new Map(controls.map(p=>[p.name,p]));
@@ -60,6 +66,16 @@ export class DreamFeature {
  change(values,pulses=[]){Object.assign(this.settings,values);this.reflect();try{localStorage.setItem('mosh-dream-studio-v1',JSON.stringify(this.settings))}catch{}this.renderer?.configure(values,pulses);this.syncActivity();}
  show(value){this.panel.hidden=!value;this.button.setAttribute('aria-expanded',String(value));}
  status(text){if(this.$('[data-role=status]').textContent===text)return;this.$('[data-role=status]').textContent=text;this.statusHistory.push({at:performance.now(),text});this.statusHistory=this.statusHistory.slice(-100);this.onStatus(text);}
+ preparationStatus(){
+  const box=this.$('[data-role=preparation]'),p=this.renderer?.preparationProgress?.();if(!box)return;
+  box.hidden=!p||p.ready;if(box.hidden)return;
+  const bar=this.$('[data-role=preparation-bar]');
+  if(p.known){bar.max=p.total;bar.value=p.done;}else bar.removeAttribute('value');
+  this.$('[data-role=preparation-count]').textContent=p.known?(p.done===p.total?'Models ready · finishing setup':`${p.done} / ${p.total} models ready`):'Preparing model list…';
+  this.$('[data-role=preparation-time]').textContent=`${Math.floor(p.elapsed)} s elapsed`;
+  const labels={encoder:'Encoder',fast:'Renderer',prefix:'Features'};
+  this.$('[data-role=preparation-roles]').textContent=p.roles.map(r=>`${labels[r.role]}: ${r.ready?'ready':r.total===null?'starting':`${r.done}/${r.total}${r.done===r.total?' · setup':''}`}`).join(' · ');
+ }
  diagnostics(){return {architecture:'browser-studio-sd-turbo-512',enabled:this.enabled,active:this.active,visible:this.visible,settings:this.settings,backend:this.backend,supportError:this.supportError,failure:this.failure,failureDetails:this.failureDetails,capabilities:{secure:isSecureContext,webnn:!!navigator.ml,webgpu:!!navigator.gpu,userAgent:navigator.userAgent},clipId:this.clipId,updates:this.updates,presented:this.presented,renderer:this.renderer?.diagnostics(),startup:this.statusHistory};}
  activityStatus(){if(this.supportError||this.failure){this.panel.dataset.state='error';this.status(this.supportError||this.failure);return;}if(!this.enabled){this.status(this.renderer?.ready?'Off · compiled models stay resident':this.renderer?'Off · models are finishing their first load':'Off · no model loaded');return;}if(!this.renderer?.ready)return;this.status(!this.settings.Running?'Paused · models stay resident':this.waitingForFrames?'Waiting for the YouTube frame bridge · native playback continues':!this.visible?'Ready · open a film in the large viewing frame':document.hidden?'Ready · page is in the background':this.video?.paused?'Ready · film is paused':this.video?.ended?'Ready · film has ended':this.hasResult?'Dreaming · same resident studio models':'Ready · waiting for the film’s first neural image');}
  async enable(){
@@ -72,7 +88,7 @@ export class DreamFeature {
   try{
    await this.readyControls;if(revision!==this.revision||!this.enabled)return;this.panel.dataset.state='loading';this.button.classList.add('is-on');this.$('[data-action=enable]').textContent='Turn off';this.$('[data-setting=backend]').disabled=true;
    this.canvas=document.createElement('canvas');this.canvas.className='dream-film-surface';this.canvas.hidden=true;this.mount.prepend(this.canvas);
-   const renderer=this.renderer=new DreamRenderer(this.canvas,{onStatus:t=>{if(revision===this.revision){if(this.enabled)this.status(t);else this.activityStatus()}},onError:e=>{if(revision===this.revision){this.fail('Dream mode stopped: '+e)}},onFrame:()=>{if(revision===this.revision){this.presented++;this.hasFrame=true}},onPresentation:()=>{if(revision===this.revision){this.hasResult=true;this.syncActivity()}},onResult:stats=>{if(revision===this.revision){this.updates++;this.last=stats;this.$('[data-role=latency]').textContent=stats.ms.toFixed(0)}}});
+   const renderer=this.renderer=new DreamRenderer(this.canvas,{onPreparation:()=>{if(revision===this.revision)this.preparationStatus()},onStatus:t=>{if(revision===this.revision){if(this.enabled)this.status(t);else this.activityStatus()}},onError:e=>{if(revision===this.revision){this.fail('Dream mode stopped: '+e)}},onFrame:()=>{if(revision===this.revision){this.presented++;this.hasFrame=true}},onPresentation:()=>{if(revision===this.revision){this.hasResult=true;this.syncActivity()}},onResult:stats=>{if(revision===this.revision){this.updates++;this.last=stats;this.$('[data-role=latency]').textContent=stats.ms.toFixed(0)}}});
    renderer.configure(this.settings);this.syncActivity();this.loading=renderer.load({backend:this.backend});await this.loading;if(revision!==this.revision)return;this.loading=null;this.panel.dataset.state=this.enabled?'ready':'off';this.syncActivity();
   }catch(e){if(revision===this.revision){this.fail('Could not load Dream studio: '+e.message)}}
  }
@@ -87,7 +103,7 @@ export class DreamFeature {
   this.activityStatus();
  }
  // Destruction is reserved for page teardown, a device change, or a fatal error.
- release(){this.revision++;this.enabled=false;this.loading=null;this.active=false;this.pending=false;this.hasFrame=false;this.hasResult=false;this.lastTime=undefined;this.renderer?.dispose();this.renderer=null;this.canvas?.remove();this.canvas=null;this.panel.dataset.state='off';this.button.classList.remove('is-on');this.$('[data-action=enable]').textContent='Enable dream mode';this.$('[data-setting=backend]').disabled=false;this.$('[data-role=latency]').textContent='—';this.status('Off · GPU resources released');}
+ release(){this.revision++;this.enabled=false;this.loading=null;this.active=false;this.pending=false;this.hasFrame=false;this.hasResult=false;this.lastTime=undefined;this.renderer?.dispose();this.renderer=null;this.preparationStatus();this.canvas?.remove();this.canvas=null;this.panel.dataset.state='off';this.button.classList.remove('is-on');this.$('[data-action=enable]').textContent='Enable dream mode';this.$('[data-setting=backend]').disabled=false;this.$('[data-role=latency]').textContent='—';this.status('Off · GPU resources released');}
  setView({visible,video,clip}){
   if(video!==this.video||clip?.id!==this.clipId){this.pending=false;this.captureTicket=null;for(const event of ['seeking','seeked'])this.video?.removeEventListener?.(event,this.onSeek);this.video=video;this.clipId=clip?.id;this.onSeek=()=>{this.pending=false;this.captureTicket=null;this.lastVersion=undefined;this.renderer?.reset();this.hasResult=false;this.lastTime=undefined;this.syncActivity()};for(const event of ['seeking','seeked'])video?.addEventListener?.(event,this.onSeek);this.renderer?.reset();this.lastVersion=undefined;this.lastTime=undefined;this.hasFrame=false;this.hasResult=false;}
   this.waitingForFrames=Boolean(visible&&video?.nativeOnly);this.visible=Boolean(visible&&video&&!video.nativeOnly);this.syncActivity();
