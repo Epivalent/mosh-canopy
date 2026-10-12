@@ -1,13 +1,13 @@
 {
-  "createdAt": "2026-10-12T10:21:05.572Z",
+  "createdAt": "2026-10-12T10:44:43.811Z",
   "site": "https://epivalent.github.io/mosh-canopy/",
   "assets": "https://pub-fd77318b30094f8a923cae6a232a72fa.r2.dev/",
   "relay": "https://mosh-canopy-assets.moshcanopy.workers.dev/",
   "files": [
     {
       "file": "index.html",
-      "bytes": 258443,
-      "sha256": "4b72dec4d4c8b5063923beef6098bff56d22f1b6f6f9039faa4ed1f8ea7804ee"
+      "bytes": 258506,
+      "sha256": "54669cb7da36f3b4acc4862e60658b89e7dfe65d5515d2399a007f1e5a089b3e"
     },
     {
       "file": "assets/vendor/bead-preview-worker.js",
@@ -356,8 +356,8 @@
     },
     {
       "file": "assets/vendor/go-navigation.js",
-      "bytes": 5376,
-      "sha256": "5b357f0fb503dbf4d076914e38adce04b415bc744db9d24bc4bff6e981b96863"
+      "bytes": 5207,
+      "sha256": "c87369dc0aa9cf210c5fa84431f94c2a33a36cdd20120e0a83eecb55564cd370"
     },
     {
       "file": "assets/vendor/go-search-core.js",
@@ -576,8 +576,8 @@
     },
     {
       "file": "assets/vendor/welcome.js",
-      "bytes": 13051,
-      "sha256": "4866ff44b140399dbe10614d8e6705caed8cd5650d70e2916c65c24a55e4c1b9"
+      "bytes": 13048,
+      "sha256": "96c86c27532f0d29aff51401128250e1a786bae1a2eab3118d2664dbee09e112"
     },
     {
       "file": "assets/vendor/word-helices.js",

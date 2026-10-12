@@ -154,9 +154,12 @@ details summary{cursor:pointer;margin:8px 0}
 <div id="clipCaptions" hidden aria-label="Film subtitles"><div></div></div>
 <section id="goPanel" hidden aria-label="Go to a film">
   <h2>Go</h2>
-  <form id="goForm"><input id="goQuery" type="search" placeholder="Title, idea, words, or YouTube link…" aria-label="Film destination" required><button class="tape" type="submit">Go</button></form>
-  <label>Destination <select id="goChoice"><option value="best">Best match</option><option value="random">Random from top matches</option></select></label>
-  <label>Top <input id="goCount" type="number" min="1" step="1" value="10" form="goForm" style="width:5em" disabled> results</label>
+  <form id="goForm"><input id="goQuery" type="search" placeholder="Title, idea, words, or YouTube link…" aria-label="Film destination" required></form>
+  <div class="buttons" style="align-items:center;flex-wrap:wrap">
+    <button class="tape" type="submit" form="goForm" value="top">Top</button>
+    <button class="tape" type="submit" form="goForm" value="random">Random</button>
+    <label>from top <input id="goCount" type="number" min="1" step="1" value="10" aria-label="Random result pool size" style="width:4em"></label>
+  </div>
   <p class="note">Random chooses from up to this many matching films. A URL or video ID always opens that exact film.</p>
   <p class="note">Search all archives by title, then theme, then spoken words. Any YouTube URL or video ID works; <b>yt: your query</b> searches YouTube directly.</p>
   <p id="goStatus" role="status">Where would you like to go?</p>
@@ -279,7 +282,7 @@ details summary{cursor:pointer;margin:8px 0}
 <div id="drop">Drop video files to add them to the archive</div>
 <div id="toast" role="status"></div>
 <div id="fatal"></div>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/welcome.js?v=go3"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/welcome.js?v=go-buttons4"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/three.min.js"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/browser-segmenter.js?v=8"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/collage-layout.js?v=2"></script>
@@ -308,7 +311,7 @@ details summary{cursor:pointer;margin:8px 0}
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/youtube-direct.js?v=direct-assets1-24"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/retrotv.js?v=neon1"></script>
 <script src="https://epivalent.github.io/mosh-canopy/assets/vendor/go-search-core.js?v=1"></script>
-<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/go-navigation.js?v=1"></script>
+<script src="https://epivalent.github.io/mosh-canopy/assets/vendor/go-navigation.js?v=buttons2"></script>
 <script>
 'use strict';
 const MIA_ON = true;
